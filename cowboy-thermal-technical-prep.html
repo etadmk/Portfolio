@@ -1,0 +1,370 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Orbital data centre thermal — technical round</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0B111C; --panel:#121B2A; --panel2:#0F1724; --line:#1F2E44; --line2:#2C4160;
+  --ink:#E4EBF4; --mute:#8496AD; --dim:#5B6D86;
+  --liq:#35C7C0; --vap:#F3C24B; --hot:#F5843B; --cool:#6E9BF7; --warn:#EC6BAA; --ok:#89D653; --sys:#B189F2;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font-family:"IBM Plex Sans",system-ui,sans-serif;font-size:15px;line-height:1.62;padding:0 0 80px;
+ background-image:linear-gradient(180deg,#101A2B 0%,#0B111C 460px)}
+.wrap{max-width:1080px;margin:0 auto;padding:0 22px}
+.mono{font-family:"IBM Plex Mono",monospace}
+header.top{padding:44px 0 24px;border-bottom:1px solid var(--line)}
+.eyebrow{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--dim)}
+h1{font-family:"Barlow Condensed",sans-serif;font-weight:600;font-size:clamp(36px,6.5vw,60px);line-height:.98;text-transform:uppercase;margin:10px 0 12px}
+h1 em{font-style:normal;color:var(--liq)}
+.lede{color:var(--mute);max-width:64ch}
+.board{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);margin:24px 0 0}
+.cell{background:var(--panel2);padding:11px 13px}
+.cell .k{font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--dim)}
+.cell .v{font-family:"Barlow Condensed",sans-serif;font-size:26px;font-weight:500;line-height:1.12;margin-top:2px}
+h2{font-family:"Barlow Condensed",sans-serif;font-weight:600;font-size:32px;text-transform:uppercase;letter-spacing:.04em;margin:0 0 4px}
+.sechead{border-top:1px solid var(--line);padding-top:26px;margin-top:52px}
+.secnote{color:var(--dim);font-size:13.5px;margin-bottom:22px;max-width:70ch}
+h3{font-family:"Barlow Condensed",sans-serif;font-weight:600;font-size:21px;text-transform:uppercase;letter-spacing:.03em;margin:26px 0 8px;color:var(--ink)}
+p{margin-bottom:13px;max-width:74ch}
+.fig{background:var(--panel);border:1px solid var(--line);padding:18px 18px 12px;margin:18px 0 22px}
+.fig figcaption{font-family:"IBM Plex Mono",monospace;font-size:11.5px;color:var(--dim);margin-top:10px;letter-spacing:.02em}
+svg{display:block;width:100%;height:auto}
+.tl{font-family:"IBM Plex Mono",monospace;font-size:11px;fill:var(--mute)}
+.tb{font-family:"IBM Plex Sans",sans-serif;font-size:12.5px;font-weight:500;fill:var(--ink)}
+.tn{font-family:"IBM Plex Mono",monospace;font-size:11px;fill:var(--dim)}
+.eqbox{background:var(--panel2);border-left:2px solid var(--liq);padding:12px 15px;font-family:"IBM Plex Mono",monospace;font-size:13px;color:#C9D6E6;margin:14px 0;white-space:pre-wrap;overflow-x:auto}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:13px;margin-top:6px}
+.card{background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--c,var(--liq))}
+.card .hd{display:flex;gap:9px;padding:11px 14px 0;align-items:center}
+.pid{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.1em;color:var(--c,var(--liq))}
+.ptag{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--dim)}
+button{font:inherit;cursor:pointer;border:none;background:none;color:inherit;text-align:left}
+.qbtn{padding:7px 14px 13px;width:100%;font-size:14.5px;line-height:1.5}
+.qbtn::after{content:"tap to answer";display:block;font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--dim);margin-top:9px}
+.card.open .qbtn::after{content:"hide"}
+.ans{display:none;padding:13px 14px 15px;border-top:1px dashed var(--line2);background:var(--panel2);font-size:14px;color:#C9D6E6}
+.card.open .ans{display:block}
+.ans b{color:var(--c,var(--liq));font-weight:500;font-family:"IBM Plex Mono",monospace;font-size:13.5px}
+.ans .n{font-family:"IBM Plex Mono",monospace;color:#fff}
+ul{margin:0 0 14px 20px;max-width:74ch}li{margin-bottom:7px}
+table{border-collapse:collapse;width:100%;margin:14px 0;font-size:13.5px}
+th,td{text-align:left;padding:8px 11px;border-bottom:1px solid var(--line)}
+th{font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--dim);font-weight:400}
+td.m{font-family:"IBM Plex Mono",monospace;color:#fff}
+.callout{background:var(--panel);border:1px solid var(--line);border-top:3px solid var(--warn);padding:15px 17px;margin:20px 0}
+.callout .lbl{font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--warn);margin-bottom:6px}
+footer{margin-top:56px;border-top:1px solid var(--line);padding-top:18px;color:var(--dim);font-size:12.5px}
+@media (max-width:600px){.grid{grid-template-columns:1fr}h1{font-size:34px}}
+</style>
+
+<div class="wrap">
+<header class="top">
+<div class="eyebrow">Technical round · fluid systems &amp; radiators</div>
+<h1>Megawatt thermal<br><em>in orbit</em></h1>
+<p class="lede">Everything below is built from what is publicly known about the architecture — a 1 MW upper-stage data centre, roughly 800 GPUs, 20–25 t, five-year life, dawn–dusk sun-synchronous between 700 and 1000 km. Treat every number as an order-of-magnitude estimate with its assumption attached, and quote it that way.</p>
+<div class="board">
+<div class="cell"><div class="k">Heat to reject</div><div class="v" style="color:var(--hot)">1 MW</div></div>
+<div class="cell"><div class="k">Per GPU</div><div class="v">1.25 kW</div></div>
+<div class="cell"><div class="k">Radiator area</div><div class="v" style="color:var(--liq)">~1,900 m²</div></div>
+<div class="cell"><div class="k">Water flow</div><div class="v">12 kg/s</div></div>
+<div class="cell"><div class="k">Ammonia flow</div><div class="v" style="color:var(--vap)">0.9 kg/s</div></div>
+<div class="cell"><div class="k">Life</div><div class="v">43,800 h</div></div>
+</div>
+</header>
+
+<div class="sechead">
+<h2>01 · The architecture you should assume</h2>
+<p class="secnote">If you sketch anything on a whiteboard, sketch this. It is the standard answer for a high-power spacecraft and it explains itself.</p>
+</div>
+
+<figure class="fig">
+<svg viewBox="0 0 700 300" role="img" aria-label="Two-loop thermal architecture: internal water loop with GPU cold plates, interface heat exchanger, external ammonia loop to the radiator">
+<rect x="24" y="66" width="140" height="66" rx="6" fill="#123640" stroke="#35C7C0" stroke-width="1"/>
+<text class="tb" x="94" y="92" text-anchor="middle">800 GPU</text>
+<text class="tb" x="94" y="110" text-anchor="middle">cold plates</text>
+
+<rect x="280" y="66" width="130" height="66" rx="6" fill="#1B2A3F" stroke="#6E9BF7" stroke-width="1"/>
+<text class="tb" x="345" y="92" text-anchor="middle">Interface</text>
+<text class="tb" x="345" y="110" text-anchor="middle">heat exchanger</text>
+
+<rect x="528" y="66" width="150" height="66" rx="6" fill="#2A2033" stroke="#B189F2" stroke-width="1"/>
+<text class="tb" x="603" y="92" text-anchor="middle">Radiator</text>
+<text class="tb" x="603" y="110" text-anchor="middle">~1,900 m²</text>
+
+<path d="M164 84 L274 84" stroke="#F5843B" stroke-width="2" marker-end="url(#a)"/>
+<path d="M274 114 L170 114" stroke="#35C7C0" stroke-width="2" marker-end="url(#a)"/>
+<circle cx="222" cy="114" r="9" fill="#0F1724" stroke="#35C7C0" stroke-width="1.4"/>
+<text class="tn" x="222" y="118" text-anchor="middle" fill="#35C7C0">P</text>
+
+<path d="M410 84 L522 84" stroke="#F5843B" stroke-width="2" marker-end="url(#a)"/>
+<path d="M522 114 L416 114" stroke="#35C7C0" stroke-width="2" marker-end="url(#a)"/>
+<circle cx="468" cy="114" r="9" fill="#0F1724" stroke="#35C7C0" stroke-width="1.4"/>
+<text class="tn" x="468" y="118" text-anchor="middle" fill="#35C7C0">P</text>
+
+<path d="M222 123 L222 168" stroke="#2C4160" stroke-width="1.2"/>
+<rect x="182" y="168" width="80" height="34" rx="4" fill="#0F1724" stroke="#2C4160"/>
+<text class="tn" x="222" y="189" text-anchor="middle">accumulator</text>
+<path d="M468 123 L468 168" stroke="#2C4160" stroke-width="1.2"/>
+<rect x="428" y="168" width="80" height="34" rx="4" fill="#0F1724" stroke="#2C4160"/>
+<text class="tn" x="468" y="189" text-anchor="middle">accumulator</text>
+
+<path d="M18 232 L410 232" stroke="#35C7C0" stroke-width="1" stroke-dasharray="4 4"/>
+<text class="tl" x="214" y="252" text-anchor="middle">Internal loop — water or glycol, copper compatible</text>
+<path d="M420 232 L682 232" stroke="#B189F2" stroke-width="1" stroke-dasharray="4 4"/>
+<text class="tl" x="551" y="252" text-anchor="middle">External loop — ammonia, aluminium only</text>
+<text class="tn" x="350" y="286" text-anchor="middle">Orange = hot leg · teal = cold return · P = pump</text>
+<defs><marker id="a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.6" stroke-linecap="round"/></marker></defs>
+</svg>
+<figcaption>Fig 1 — Two-loop architecture. Ammonia attacks copper, so it never touches a GPU cold plate.</figcaption>
+</figure>
+
+<p><strong>Why two loops and not one.</strong> Ammonia is the right external fluid — high latent heat, good vapour pressure in the 250–350 K band, decades of flight heritage. But ammonia attacks copper and copper alloys, and GPU cold plates are copper because you need the spreading conductivity at the die. So you run water or a glycol mix internally where the copper is, ammonia externally where the radiators are, and couple them through an interface heat exchanger. This is exactly the ISS architecture and it is the safe answer.</p>
+
+<p>Say the cost out loud too: the interface heat exchanger adds a temperature drop you cannot recover, and every kelvin you spend there costs radiator area as the fourth power.</p>
+
+<div class="sechead">
+<h2>02 · Sizing the radiator</h2>
+<p class="secnote">The single most likely whiteboard question. Have the equation and the fourth-power intuition ready before the number.</p>
+</div>
+
+<div class="eqbox">A = Q / (ε σ T⁴)
+
+Q = 1×10⁶ W    ε = 0.85    σ = 5.67×10⁻⁸
+
+at 320 K:  σT⁴ = 594 W/m²  →  ×0.85 = 505  →  A ≈ 1,980 m²
+at 350 K:  σT⁴ = 851 W/m²  →  ×0.85 = 723  →  A ≈ 1,383 m²
+at 400 K:  σT⁴ = 1452 W/m² →  ×0.85 = 1234 →  A ≈   810 m²</div>
+
+<figure class="fig">
+<svg viewBox="0 0 700 290" role="img" aria-label="Radiator area falls steeply with radiator temperature, from about 2560 square metres at 300 kelvin to 810 at 400 kelvin">
+<line x1="80" y1="240" x2="672" y2="240" stroke="#2C4160"/>
+<line x1="80" y1="46" x2="80" y2="240" stroke="#2C4160"/>
+<text class="tl" x="72" y="66" text-anchor="end">2,600</text>
+<text class="tl" x="72" y="106" text-anchor="end">2,000</text>
+<text class="tl" x="72" y="175" text-anchor="end">1,000</text>
+<text class="tl" x="72" y="244" text-anchor="end">0</text>
+<text class="tn" x="80" y="30">radiator area, m²</text>
+<polyline points="80,63 196,103 312,133 428,155 544,171 660,184" fill="none" stroke="#35C7C0" stroke-width="2.5"/>
+<circle cx="80" cy="63" r="3.5" fill="#35C7C0"/><circle cx="196" cy="103" r="3.5" fill="#35C7C0"/>
+<circle cx="312" cy="133" r="3.5" fill="#35C7C0"/><circle cx="428" cy="155" r="3.5" fill="#35C7C0"/>
+<circle cx="544" cy="171" r="3.5" fill="#35C7C0"/><circle cx="660" cy="184" r="3.5" fill="#35C7C0"/>
+<line x1="213" y1="108" x2="213" y2="240" stroke="#EC6BAA" stroke-width="1" stroke-dasharray="5 4"/>
+<circle cx="213" cy="108" r="4.5" fill="#EC6BAA"/>
+<text class="tn" x="228" y="98" fill="#EC6BAA">323 K → 1,900 m²</text>
+<text class="tl" x="80" y="260" text-anchor="middle">300</text><text class="tl" x="196" y="260" text-anchor="middle">320</text>
+<text class="tl" x="312" y="260" text-anchor="middle">340</text><text class="tl" x="428" y="260" text-anchor="middle">360</text>
+<text class="tl" x="544" y="260" text-anchor="middle">380</text><text class="tl" x="660" y="260" text-anchor="middle">400</text>
+<text class="tn" x="376" y="280" text-anchor="middle">radiator temperature, K</text>
+</svg>
+<figcaption>Fig 2 — Area for 1 MW at ε = 0.85. Every 20 K you claw back is worth hundreds of square metres.</figcaption>
+</figure>
+
+<p>The point to make is not the number, it is the shape. <strong>Area is not a design choice, it is a consequence of the temperature you can hold.</strong> That reframes the whole conversation: the interesting engineering is in the ΔT budget between the die and the radiating surface, because every kelvin you give away there is paid for in deployable area, mass and stowed volume.</p>
+
+<div class="sechead">
+<h2>03 · The ΔT budget — where the argument actually is</h2>
+<p class="secnote">If you bring one original framing into the room, bring this one.</p>
+</div>
+
+<figure class="fig">
+<svg viewBox="0 0 700 280" role="img" aria-label="Temperature falls in steps from a 90 degree junction through the cold plate, transport and heat exchanger, and radiator fin, to an effective radiating temperature near 50 degrees">
+<line x1="72" y1="52" x2="72" y2="228" stroke="#2C4160"/>
+<line x1="72" y1="228" x2="668" y2="228" stroke="#2C4160"/>
+<text class="tl" x="64" y="66" text-anchor="end">100 °C</text>
+<text class="tl" x="64" y="146" text-anchor="end">70 °C</text>
+<text class="tl" x="64" y="226" text-anchor="end">40 °C</text>
+
+<line x1="88" y1="87" x2="212" y2="87" stroke="#F5843B" stroke-width="3"/>
+<line x1="212" y1="87" x2="212" y2="140" stroke="#EC6BAA" stroke-width="1.4" stroke-dasharray="4 3"/>
+<line x1="212" y1="140" x2="368" y2="140" stroke="#F5843B" stroke-width="3"/>
+<line x1="368" y1="140" x2="368" y2="161" stroke="#EC6BAA" stroke-width="1.4" stroke-dasharray="4 3"/>
+<line x1="368" y1="161" x2="500" y2="161" stroke="#F5843B" stroke-width="3"/>
+<line x1="500" y1="161" x2="500" y2="193" stroke="#EC6BAA" stroke-width="1.4" stroke-dasharray="4 3"/>
+<line x1="500" y1="193" x2="640" y2="193" stroke="#35C7C0" stroke-width="3"/>
+
+<text class="tb" x="150" y="78" text-anchor="middle">junction 90 °C</text>
+<text class="tn" x="290" y="132" text-anchor="middle">coolant 70 °C</text>
+<text class="tn" x="434" y="153" text-anchor="middle">radiator root 62 °C</text>
+<text class="tb" x="570" y="185" text-anchor="middle">radiating 50 °C</text>
+
+<text class="tn" x="220" y="118" fill="#EC6BAA">−20 K  die to coolant</text>
+<text class="tn" x="376" y="155" fill="#EC6BAA">−8 K  HX + lines</text>
+<text class="tn" x="508" y="180" fill="#EC6BAA">−12 K  fin + glide</text>
+<text class="tn" x="350" y="258" text-anchor="middle">Each dashed drop is area you have to buy back — 50 °C = 323 K = ~1,900 m²</text>
+</svg>
+<figcaption>Fig 3 — Illustrative budget. The die runs at 90 °C; the surface that actually radiates sits 40 K lower.</figcaption>
+</figure>
+
+<p>Three drops, three different disciplines. The die-to-coolant drop is interface material, spreading resistance and cold-plate design. The heat exchanger and line drop is the price of the two-loop architecture. The fin and glide drop is radiator panel construction and whether the loop is single or two-phase. Naming which of the three you would attack first — and why — is a much better answer than a number.</p>
+
+<div class="sechead">
+<h2>04 · Single-phase or two-phase</h2>
+<p class="secnote">Expect this. It has two independent arguments and most candidates only know one.</p>
+</div>
+
+<div class="eqbox">single-phase:  ṁ = Q / (c_p ΔT) = 10⁶ / (4180 × 20) ≈ 12 kg/s
+two-phase:     ṁ = Q / h_fg      = 10⁶ / 1.1×10⁶  ≈ 0.9 kg/s
+
+roughly 13× less mass flow for the same megawatt</div>
+
+<figure class="fig">
+<svg viewBox="0 0 700 260" role="img" aria-label="Along the radiator, a single-phase loop cools from 60 to 40 degrees while a two-phase loop stays isothermal at 60 degrees until it condenses fully">
+<line x1="80" y1="46" x2="80" y2="200" stroke="#2C4160"/>
+<line x1="80" y1="200" x2="660" y2="200" stroke="#2C4160"/>
+<text class="tl" x="72" y="72" text-anchor="end">60 °C</text>
+<text class="tl" x="72" y="198" text-anchor="end">40 °C</text>
+<path d="M80 68 L560 68 L620 190" fill="none" stroke="#F3C24B" stroke-width="2.5"/>
+<path d="M80 68 C220 92 400 150 660 190" fill="none" stroke="#6E9BF7" stroke-width="2.5"/>
+<text class="tn" x="300" y="58" fill="#F3C24B">two-phase — isothermal at saturation</text>
+<text class="tn" x="320" y="146" fill="#6E9BF7">single-phase — temperature glides down</text>
+<text class="tn" x="370" y="222" text-anchor="middle">distance along the radiator →</text>
+<text class="tn" x="370" y="244" text-anchor="middle">The whole two-phase panel radiates at the top of the T⁴ curve; the single-phase tail barely radiates at all</text>
+</svg>
+<figcaption>Fig 4 — Why two-phase wins twice: far less mass flow, and no glide penalty on a T⁴ process.</figcaption>
+</figure>
+
+<p>The mass-flow argument is the bigger one. Thirteen times less flow means smaller lines, less inventory, less pump power and less mass — at megawatt scale that is structural, not marginal. The isothermal argument is worth roughly 10–15% of area on top.</p>
+
+<div class="callout">
+<div class="lbl">Say the cost, not just the benefit</div>
+Two-phase in microgravity gives up buoyancy. Bubbles do not depart the boiling surface on their own, so critical heat flux drops. Condensation becomes shear-driven rather than gravity-drained. Parallel evaporators can oscillate against each other. And none of it can be fully replicated in a 1 g test rig. If you name those unprompted, the two-phase answer sounds like judgment rather than a preference.
+</div>
+
+<div class="sechead">
+<h2>05 · Fluid system hardware — what is in the loop and why</h2>
+<p class="secnote">The round is on hardware. Know what each component exists to prevent.</p>
+</div>
+
+<table>
+<tr><th>Component</th><th>Exists because</th></tr>
+<tr><td class="m">Accumulator</td><td>Liquid is nearly incompressible. A 30 K swing on a rigid water loop would move pressure by roughly 140 bar. It also sets pump inlet pressure and absorbs leakage over life.</td></tr>
+<tr><td class="m">Pump, redundant</td><td>Five years is 43,800 hours continuous. Bearings and any dynamic seal are the life driver — wet-rotor brushless removes the seal entirely.</td></tr>
+<tr><td class="m">Filter</td><td>Manufacturing particulate blocks microchannels. Mesh sized below the smallest channel dimension, upstream of the cold plates.</td></tr>
+<tr><td class="m">Isolation valves</td><td>Segment the loop so one puncture does not empty the system.</td></tr>
+<tr><td class="m">Gas trap / vent</td><td>Non-condensable gas migrates to the condenser and blocks area, driving the whole loop hotter.</td></tr>
+<tr><td class="m">Heaters</td><td>Ammonia freezes at 195 K, water at 273 K. A radiator permanently facing cold space can freeze at low compute load.</td></tr>
+<tr><td class="m">Quick disconnects</td><td>Integration and servicing without breaking the charge. Also the most likely leak path.</td></tr>
+<tr><td class="m">Instrumentation</td><td>RTDs, pressure transducers, flow meters — and the honest question is which quantities are measured versus inferred.</td></tr>
+</table>
+
+<h3>Manifold distribution across 800 cold plates</h3>
+
+<figure class="fig">
+<svg viewBox="0 0 700 250" role="img" aria-label="Flow entering a header distributes unevenly across parallel cold plates, with downstream channels receiving more flow than upstream ones">
+<rect x="70" y="52" width="560" height="26" rx="4" fill="#123640" stroke="#35C7C0"/>
+<path d="M24 65 L64 65" stroke="#35C7C0" stroke-width="3" marker-end="url(#b)"/>
+<text class="tn" x="350" y="44" text-anchor="middle">supply header — static pressure recovers along its length</text>
+<rect x="70" y="176" width="560" height="26" rx="4" fill="#123640" stroke="#35C7C0"/>
+<text class="tn" x="350" y="222" text-anchor="middle">return header</text>
+
+<line x1="120" y1="78" x2="120" y2="176" stroke="#EC6BAA" stroke-width="1.6"/>
+<rect x="106" y="112" width="28" height="30" rx="3" fill="#2A1F2C" stroke="#EC6BAA"/>
+<line x1="205" y1="78" x2="205" y2="176" stroke="#6E9BF7" stroke-width="2.4"/>
+<rect x="191" y="112" width="28" height="30" rx="3" fill="#1B2A3F" stroke="#6E9BF7"/>
+<line x1="290" y1="78" x2="290" y2="176" stroke="#6E9BF7" stroke-width="3"/>
+<rect x="276" y="112" width="28" height="30" rx="3" fill="#1B2A3F" stroke="#6E9BF7"/>
+<line x1="375" y1="78" x2="375" y2="176" stroke="#6E9BF7" stroke-width="3.6"/>
+<rect x="361" y="112" width="28" height="30" rx="3" fill="#1B2A3F" stroke="#6E9BF7"/>
+<line x1="460" y1="78" x2="460" y2="176" stroke="#6E9BF7" stroke-width="4.2"/>
+<rect x="446" y="112" width="28" height="30" rx="3" fill="#1B2A3F" stroke="#6E9BF7"/>
+<line x1="545" y1="78" x2="545" y2="176" stroke="#6E9BF7" stroke-width="4.8"/>
+<rect x="531" y="112" width="28" height="30" rx="3" fill="#1B2A3F" stroke="#6E9BF7"/>
+<text class="tn" x="120" y="160" text-anchor="middle" fill="#EC6BAA">starved</text>
+<text class="tn" x="350" y="242" text-anchor="middle">Line thickness = flow rate. The starved plate is the one that fails, and it is not the average one.</text>
+<defs><marker id="b" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.6" stroke-linecap="round"/></marker></defs>
+</svg>
+<figcaption>Fig 5 — Maldistribution off a shared header. This is the question you can answer from something you built.</figcaption>
+</figure>
+
+<p>Static pressure recovers along a supply header as velocity drops, so downstream branches can see a higher driving Δp than upstream ones. The fixes are header cross-section far larger than the sum of the branches, deliberate orificing to make branch resistance dominate, or reverse-return plumbing so every path has the same total length. <strong>Design to the worst channel, not the mean.</strong></p>
+
+<div class="sechead">
+<h2>06 · Likely questions</h2>
+<p class="secnote">Answer out loud before tapping. Anything you cannot survive a bounce-back on is not a question you should raise yourself.</p>
+</div>
+
+<div class="grid" id="grid"></div>
+
+<div class="sechead">
+<h2>07 · Your bridges</h2>
+<p class="secnote">Every one of these is on your résumé. Use the phrasing, not a paraphrase.</p>
+</div>
+<ul>
+<li><strong>UCSD, CHF on capillary evaporators.</strong> A 1.25 kW GPU spread over a die is order 100–150 W/cm². You characterised evaporator surfaces well above that. Say: <em>"the flux at the die is inside the range I've measured on capillary wicks — the difference here is that dryout means losing a GPU, not a data point."</em></li>
+<li><strong>UIUC, boiling on machined surfaces.</strong> Groove depth and spacing changed both nucleation and how much the surface degraded. Directly applicable to enhanced boiling surfaces in a two-phase cold plate — and you found that geometry has a threshold, which is a real result.</li>
+<li><strong>UIUC, crystallisation fouling.</strong> The closest thing you have to long-duration degradation of a heat transfer surface. In a closed loop the analogue is corrosion product and particulate slowly blocking microchannels.</li>
+<li><strong>Zap, liquid metal loops.</strong> Materials compatibility, freeze protection, eutectics chosen so nothing solidifies in a pipe, glovebox and vacuum handling. Loop engineering is loop engineering.</li>
+<li><strong>Your ManifoldWaterCooling 1D model.</strong> This is the most directly relevant thing you have built. Lead with it in any manifold or cold-plate conversation.</li>
+<li><strong>MarineSitu LP/MILP scheduling.</strong> Scheduling loads against a stored-energy and generation constraint. An orbital data centre schedules compute against power and thermal rejection capacity. Same problem, one level up.</li>
+</ul>
+
+<div class="sechead">
+<h2>08 · Ask them</h2>
+<p class="secnote">Three at most. All of these survive a bounce-back.</p>
+</div>
+<ul>
+<li>"Is it single or two-phase, and was mass flow or the glide penalty the deciding argument?"</li>
+<li>"With 800 plates in parallel, how do you guarantee the hottest card isn't the starved one? I built a 1D manifold model and maldistribution off a shared header was what surprised me."</li>
+<li>"I spent two years on boiling heat transfer and surface geometry. Does the microgravity CHF penalty show up in your testing, or is there enough margin that it doesn't drive anything?"</li>
+<li>"How do you validate a megawatt-class loop on the ground when you can't reproduce the flow regimes?"</li>
+<li>"Two thousand square metres for five years — is the loop segmented against micrometeoroid puncture, or designed to tolerate losing a section?"</li>
+<li>"Is compute load scheduled against the thermal envelope, or treated as fixed?"</li>
+</ul>
+
+<div class="sechead">
+<h2>09 · Cheat card</h2>
+</div>
+<div class="eqbox">A = Q/(εσT⁴)      1 MW, ε 0.85 → 1,980 m² at 320 K · 1,383 at 350 K
+ṁ = Q/(c_p ΔT)    water, 20 K rise → 12 kg/s
+ṁ = Q/h_fg        ammonia → 0.9 kg/s   (13× less)
+Δp = ρcΔV         water hammer on valve actuation
+NPSH_a > NPSH_r   or the pump cavitates
+
+Two loops: water + copper inside, ammonia + aluminium outside, IHX between.
+Ammonia freezes 195 K · water 273 K · ammonia attacks copper.
+Accumulator sets pressure, absorbs 30 K of expansion (~140 bar if rigid),
+and in a two-phase loop its temperature sets the radiator temperature.
+Radiator area is not a choice — it is whatever the ΔT budget leaves you.</div>
+
+<footer>
+Public architecture facts as of mid-2026: 1 MW per vehicle, ~800 GPUs, 20–25 t, five-year life, dawn–dusk sun-synchronous 700–1000 km, NVIDIA Space-1 Vera Rubin modules, upper stage doubles as the satellite. Verify against anything they tell you in the room — they know their design and this is an outside reconstruction.
+</footer>
+</div>
+
+<script>
+const C={fld:"var(--liq)",rad:"var(--sys)",thr:"var(--hot)",env:"var(--warn)"};
+const Q=[
+{c:"rad",t:"Radiator",q:"Size the radiator for 1 MW.",a:"<b>A = Q/(εσT⁴)</b>. At 320 K with ε = 0.85 the surface rejects 505 W/m², so <span class='n'>A ≈ 1,980 m²</span>. Double-sided panels halve the physical panel area. State the assumption on temperature first, because it moves the answer by a factor of two across a plausible range."},
+{c:"rad",t:"Radiator",q:"Why is radiator temperature the whole ballgame?",a:"Rejection goes as <b>T⁴</b>. Going from 320 K to 350 K cuts area by 30%. That is why the design conversation is really about the ΔT budget between the die and the radiating surface — every kelvin lost to an interface is paid for in deployable area, mass and stowed volume."},
+{c:"rad",t:"Radiator",q:"What is fin efficiency and why does it matter here?",a:"Heat has to conduct from the tube or embedded heat pipe out to the fin edge, so the tip runs cooler than the root — and it radiates as <b>T⁴</b>, so a cool tip contributes disproportionately little. Effective radiating temperature is below root temperature. It sets heat pipe spacing and face sheet thickness."},
+{c:"rad",t:"Radiator",q:"Why embed heat pipes in a radiator panel?",a:"They spread heat across the panel with very little ΔT, which raises fin efficiency, and they <b>compartmentalise damage</b> — a micrometeoroid that kills one pipe takes out a strip rather than the loop. The alternative, flowing coolant directly through radiator tubes, performs better but exposes the whole inventory."},
+{c:"rad",t:"Radiator",q:"What coating, and what do you design to?",a:"Optical solar reflectors, roughly <b>α 0.08 / ε 0.80</b>, or silver Teflon. Design to <b>end-of-life α</b>, not the datasheet value — UV and contamination raise absorptivity over years while emissivity barely moves, so the hot case is at the end of the mission."},
+{c:"rad",t:"Radiator",q:"Why does radiator pointing matter more than it sounds?",a:"View factor. At 800 km a nadir-facing surface sees Earth over roughly <b>79%</b> of its hemisphere and re-absorbs Earth infrared at 237 W/m². That can cost you a third of your net rejection. Dawn-dusk sun-synchronous is chosen partly so the array faces the sun continuously while the radiator faces cold sky."},
+{c:"fld",t:"Fluid",q:"Why does a closed liquid loop need an accumulator?",a:"Liquid is nearly incompressible. On a rigid water loop, a 30 K temperature swing would raise pressure by roughly <span class='n'>140 bar</span> — from α/β × ΔT with α ≈ 2.1×10⁻⁴/K and β ≈ 4.6×10⁻¹⁰/Pa. The accumulator provides compliance, sets pump inlet pressure above vapour pressure, and absorbs slow leakage over five years."},
+{c:"fld",t:"Fluid",q:"In a two-phase loop, what sets the radiator temperature?",a:"<b>Saturation pressure</b>, which is set by the temperature of the accumulator or reservoir. So you control radiator temperature with a heater on the accumulator, with no valves in the main flow path. It is the most elegant control knob in the whole architecture and worth naming."},
+{c:"fld",t:"Fluid",q:"Why can't ammonia touch the GPU cold plates?",a:"<b>Ammonia attacks copper and copper alloys</b>, and cold plates are copper for die spreading. Hence two loops joined by an interface heat exchanger — water or glycol inside with copper, ammonia outside with aluminium. Same reason ISS runs internal water and external ammonia."},
+{c:"fld",t:"Fluid",q:"Pump architecture for a five-year continuous mission?",a:"<span class='n'>43,800 hours</span> without maintenance. Redundant pumps in parallel with check valves so a failed unit is not a flow path, brushless motors, and ideally <b>wet-rotor</b> designs that eliminate the dynamic seal. Bearing life is the driver, not hydraulic performance."},
+{c:"fld",t:"Fluid",q:"How much pump power for a megawatt loop?",a:"<b>P = ṁΔp/(ρη)</b>. At 12 kg/s, 2 bar and 50% efficiency that is about <span class='n'>5 kW</span> — half a percent of the load. Worth confirming whether it comes out of the 1 MW budget or sits on top, and noting that two-phase cuts it by an order of magnitude with the flow rate."},
+{c:"fld",t:"Fluid",q:"Where does non-condensable gas come from and what does it do?",a:"Residual air from fill, and slow generation from decomposition or permeation. It migrates to the coldest part of the condenser and <b>blocks radiating area</b>, driving the whole loop hotter. Managed with a gas trap or vent, prevented by rigorous evacuation before charging."},
+{c:"fld",t:"Fluid",q:"How do you charge and leak-test a flight loop?",a:"Evacuate hard, backfill, then <b>helium mass-spectrometer leak check</b> quoted in scc/s. Watch the regime — at very low rates the flow is molecular rather than viscous, so the helium rate and the working-fluid rate do not scale by a simple density ratio."},
+{c:"fld",t:"Fluid",q:"What is water hammer here and when does it bite?",a:"<b>Δp = ρcΔV</b>, the Joukowsky pressure. Fast valve actuation into a line, or priming an evacuated section, produces a large velocity change quickly. Mitigated with slow-opening valves, orifices, and controlled fill procedures."},
+{c:"fld",t:"Fluid",q:"With 800 plates in parallel, how do you avoid starving one?",a:"Static pressure recovers along a supply header, so branch Δp is not uniform. Fixes: header cross-section far larger than the sum of branch areas, deliberate <b>orificing</b> so branch resistance dominates the header variation, or reverse-return plumbing. Design to the worst channel — the hottest card is not the average card."},
+{c:"thr",t:"Two-phase",q:"What sets CHF in a cold plate, and what does microgravity change?",a:"On Earth, bubbles depart by buoyancy and let liquid rewet the site. In microgravity there is no buoyancy, so departure relies on <b>flow shear alone</b>; bubbles linger, coalesce and can blanket the surface, so CHF falls. Design margin has to cover that, and the honest position is that it is hard to verify fully in 1 g."},
+{c:"thr",t:"Two-phase",q:"Why limit exit vapour quality in an evaporator?",a:"As quality rises the liquid film on the wall thins, and near complete evaporation it breaks down into <b>dryout</b> — wall temperature spikes. Designs typically keep exit quality well below unity so there is always a liquid film, trading some latent heat capacity for margin."},
+{c:"thr",t:"Two-phase",q:"What is the risk with many parallel two-phase channels?",a:"Channels can redistribute flow against each other, because a channel with more vapour has higher pressure drop and pushes flow to its neighbours, which then makes it worse. Managed by putting a large fixed resistance — an inlet orifice — upstream of each channel so the channel's own behaviour cannot dominate the balance."},
+{c:"env",t:"Environment",q:"How do you handle micrometeoroid risk on 2,000 m² for five years?",a:"Exposure is area times time and this is a lot of both, in the <b>700–900 km shell</b> which is the most congested there is. Mitigations: armoured tube walls, embedded heat pipes so a puncture kills a strip not the loop, segmentation with isolation valves, and enough spare area that degraded performance is still adequate."},
+{c:"env",t:"Environment",q:"Freeze protection on a radiator that always faces cold space?",a:"Ammonia freezes at <b>195 K</b> and water at 273 K. At low compute load a panel can drop below that. Handled with a radiator bypass so flow is diverted rather than chilled, survival heaters, and keeping a minimum circulation rate. Freezing a section is how you lose the loop."},
+{c:"env",t:"Environment",q:"How would you test a megawatt loop on the ground?",a:"You cannot fully — gravity changes two-phase distribution. So: sub-scale full-fidelity loops, separate-effects rigs for evaporator and condenser, orientation testing to bracket gravity influence, and honesty in the review about what is verified versus inferred. This is your experimental background talking, so answer it from experience rather than theory."},
+{c:"env",t:"Environment",q:"Why does dawn-dusk sun-synchronous help thermally?",a:"The sun sits roughly perpendicular to the orbit plane, so the array can face it continuously while the radiator faces cold sky — and there is little or no eclipse. That removes the <b>~5,700 thermal cycles a year</b> that normally drive fatigue in LEO, so this becomes a quasi-steady design rather than a cyclic one."}
+];
+document.getElementById("grid").innerHTML=Q.map((p,i)=>
+ `<article class="card" style="--c:${C[p.c]}">
+   <div class="hd"><span class="pid">Q-${String(i+1).padStart(2,"0")}</span><span class="ptag">${p.t}</span></div>
+   <button class="qbtn">${p.q}</button>
+   <div class="ans">${p.a}</div>
+ </article>`).join("");
+document.addEventListener("click",e=>{const b=e.target.closest(".qbtn");if(b)b.closest(".card").classList.toggle("open");});
+</script>

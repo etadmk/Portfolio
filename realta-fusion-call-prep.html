@@ -1,0 +1,273 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Realta Fusion — call prep</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0A1014;--panel:#111C22;--panel2:#0E171C;--line:#1D2F38;--line2:#2A4552;
+--ink:#E6EEF2;--mute:#87A0AC;--dim:#5A7482;
+--pl:#F2703C;--mag:#5FA8E8;--dec:#F3C94B;--blk:#4FC9A5;--warn:#EE6BA6;--str:#B189F2}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font-family:"IBM Plex Sans",system-ui,sans-serif;font-size:15px;line-height:1.62;padding:0 0 80px;background-image:linear-gradient(180deg,#0E1A20 0%,#0A1014 460px)}
+.wrap{max-width:1080px;margin:0 auto;padding:0 22px}
+header.top{padding:44px 0 24px;border-bottom:1px solid var(--line)}
+.eyebrow{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--dim)}
+h1{font-family:"Barlow Condensed",sans-serif;font-weight:600;font-size:clamp(36px,6.5vw,60px);line-height:.98;text-transform:uppercase;margin:10px 0 12px}
+h1 em{font-style:normal;color:var(--pl)}
+.lede{color:var(--mute);max-width:64ch}
+.board{display:grid;grid-template-columns:repeat(auto-fit,minmax(118px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);margin:24px 0 0}
+.cell{background:var(--panel2);padding:11px 13px}
+.cell .k{font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--dim)}
+.cell .v{font-family:"Barlow Condensed",sans-serif;font-size:25px;font-weight:500;line-height:1.12;margin-top:2px}
+h2{font-family:"Barlow Condensed",sans-serif;font-weight:600;font-size:32px;text-transform:uppercase;letter-spacing:.04em;margin:0 0 4px}
+.sechead{border-top:1px solid var(--line);padding-top:26px;margin-top:52px}
+.secnote{color:var(--dim);font-size:13.5px;margin-bottom:22px;max-width:72ch}
+h3{font-family:"Barlow Condensed",sans-serif;font-weight:600;font-size:21px;text-transform:uppercase;letter-spacing:.03em;margin:26px 0 8px}
+p{margin-bottom:13px;max-width:74ch}
+.fig{background:var(--panel);border:1px solid var(--line);padding:18px 18px 12px;margin:18px 0 22px}
+.fig figcaption{font-family:"IBM Plex Mono",monospace;font-size:11.5px;color:var(--dim);margin-top:10px}
+svg{display:block;width:100%;height:auto}
+.tl{font-family:"IBM Plex Mono",monospace;font-size:11px;fill:var(--mute)}
+.tb{font-family:"IBM Plex Sans",sans-serif;font-size:12.5px;font-weight:500;fill:var(--ink)}
+.tn{font-family:"IBM Plex Mono",monospace;font-size:11px;fill:var(--dim)}
+.eqbox{background:var(--panel2);border-left:2px solid var(--pl);padding:12px 15px;font-family:"IBM Plex Mono",monospace;font-size:13px;color:#C4D6DE;margin:14px 0;white-space:pre-wrap;overflow-x:auto}
+.say{background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--dec);padding:15px 17px;margin:16px 0;font-size:15.5px;color:#F0F7FA}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:13px}
+.card{background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--c,var(--pl))}
+.card .hd{display:flex;gap:9px;padding:11px 14px 0;align-items:center}
+.pid{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.1em;color:var(--c,var(--pl))}
+.ptag{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--dim)}
+button{font:inherit;cursor:pointer;border:none;background:none;color:inherit;text-align:left}
+.qbtn{padding:7px 14px 13px;width:100%;font-size:14.5px;line-height:1.5}
+.qbtn::after{content:"tap";display:block;font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--dim);margin-top:9px}
+.card.open .qbtn::after{content:"hide"}
+.ans{display:none;padding:13px 14px 15px;border-top:1px dashed var(--line2);background:var(--panel2);font-size:14px;color:#C4D6DE}
+.card.open .ans{display:block}
+.ans b{color:var(--c,var(--pl));font-weight:500}
+.ans .n{font-family:"IBM Plex Mono",monospace;color:#fff}
+ul{margin:0 0 14px 20px;max-width:74ch}li{margin-bottom:7px}
+table{border-collapse:collapse;width:100%;margin:14px 0;font-size:13.5px}
+th,td{text-align:left;padding:8px 11px;border-bottom:1px solid var(--line)}
+th{font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--dim);font-weight:400}
+td.m{font-family:"IBM Plex Mono",monospace;color:#fff}
+.callout{background:var(--panel);border:1px solid var(--line);border-top:3px solid var(--warn);padding:15px 17px;margin:20px 0}
+.callout .lbl{font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--warn);margin-bottom:6px}
+footer{margin-top:56px;border-top:1px solid var(--line);padding-top:18px;color:var(--dim);font-size:12.5px}
+@media (max-width:600px){.grid{grid-template-columns:1fr}h1{font-size:34px}}
+</style>
+
+<div class="wrap">
+<header class="top">
+<div class="eyebrow">Call prep &middot; Dominick Bindl, Realta Fusion &middot; 3:00 PM CT</div>
+<h1>He is a<br><em>materials scientist</em></h1>
+<p class="lede">Public sources list Dominick Bindl as Realta's <strong>VP of Technical Development</strong> &mdash; confirm the title lightly rather than calling him CTO. He has a PhD in materials science from UW&ndash;Madison, started his private-sector career in R&amp;D at Intel in Portland, and returned to Wisconsin in 2016 for green tech. Wisconsin native, grew up on a farm in the Driftless, undergrad at Minnesota.</p>
+<div class="board">
+<div class="cell"><div class="k">Founded</div><div class="v">2022</div></div>
+<div class="cell"><div class="k">Raised</div><div class="v">$140M</div></div>
+<div class="cell"><div class="k">Headcount</div><div class="v">~50</div></div>
+<div class="cell"><div class="k">WHAM field</div><div class="v" style="color:var(--mag)">17 T</div></div>
+<div class="cell"><div class="k">Next machine</div><div class="v">Hammir</div></div>
+<div class="cell"><div class="k">Q &ge; 1 target</div><div class="v" style="color:var(--pl)">2028</div></div>
+</div>
+</header>
+
+<div class="sechead">
+<h2>01 &middot; Why his background is the best news here</h2>
+<p class="secnote">You are talking to a materials PhD who spent years in semiconductor R&amp;D. That is unusually good for you.</p>
+</div>
+
+<p>Your Zap work &mdash; eutectic determination by STA and DSC, SEM/EDX, porous refractory characterisation, Archimedes density, glovebox and vacuum ops &mdash; is <strong>his native language</strong>. Most people pitching a fusion company lead with plasma. You should lead with materials and test hardware, and he will follow every word.</p>
+
+<p>The Intel part matters too. Semiconductor R&amp;D runs on metrology discipline, repeatability, and separating a measurement artefact from a real effect. Your multimeter-versus-physics debugging story and your CHF rig troubleshooting land differently with someone from that world than they would with a plasma physicist.</p>
+
+<div class="sechead">
+<h2>02 &middot; Realta in ninety seconds</h2>
+</div>
+
+<table>
+<tr><td class="m">2020</td><td>ARPA-E funds UW&ndash;Madison to build WHAM &mdash; the Wisconsin HTS Axisymmetric Mirror. CFS supplies the HTS magnets.</td></tr>
+<tr><td class="m">2022</td><td>Realta spins out of the WHAM initiative.</td></tr>
+<tr><td class="m">Jul 2024</td><td>First plasma in WHAM at a record 17 T steady field.</td></tr>
+<tr><td class="m">Mar 2026</td><td>Partnership with Kyoto Fusioneering &mdash; gyrotrons purchased for plasma heating on the first commercial-grade machine.</td></tr>
+<tr><td class="m">Apr 2026</td><td>Long-term HTS magnet partnership with CFS, potentially multi-billion in value, plus talent sharing.</td></tr>
+<tr><td class="m">Jun 2026</td><td><strong>First commercial fusion company to demonstrate direct energy conversion</strong> on a fusion plasma. Explicitly not net electricity.</td></tr>
+<tr><td class="m">Jul 2026</td><td>Realta Forge announced at OM Station, Madison &mdash; a former Oscar Mayer plant. Up to $55M in state and city support. Hammir construction to begin before year end.</td></tr>
+</table>
+
+<p>Positioning: <strong>CoSMo</strong> &mdash; compact, scalable, modular. Market is industrial process heat and electricity. One of eight companies in the DOE Milestone-Based Fusion Development Program. Backed by Khosla Ventures and Future Ventures. Machines: WHAM today (8 m, plasma "about the size of a dinner plate"), <strong>Anvil</strong> as the prototype and volumetric neutron source, <strong>Hammir</strong> at roughly five times WHAM's length, finishing around 2029.</p>
+
+<div class="sechead">
+<h2>03 &middot; How a magnetic mirror works, and why leaky is a feature</h2>
+<p class="secnote">You need this well enough to follow him, not to lecture him.</p>
+</div>
+
+<figure class="fig">
+<svg viewBox="0 0 700 280" role="img" aria-label="Magnetic mirror layout showing high field coils at each end, a central plasma cell, particles escaping through the loss cone into an expander, and a direct energy converter">
+<rect x="140" y="96" width="26" height="88" rx="4" fill="#5FA8E8"/>
+<rect x="500" y="96" width="26" height="88" rx="4" fill="#5FA8E8"/>
+<text class="tn" x="153" y="86" text-anchor="middle" fill="#5FA8E8">17 T</text>
+<text class="tn" x="513" y="86" text-anchor="middle" fill="#5FA8E8">17 T</text>
+<path d="M166 118 Q 333 96 500 118 L500 162 Q 333 184 166 162 Z" fill="#3A1A12" stroke="#F2703C" stroke-width="1.5"/>
+<text class="tb" x="333" y="146" text-anchor="middle" fill="#F2703C">central cell &mdash; confined plasma</text>
+<path d="M526 130 L620 96" stroke="#F3C94B" stroke-width="2"/>
+<path d="M526 150 L620 184" stroke="#F3C94B" stroke-width="2"/>
+<path d="M526 140 L618 140" stroke="#F3C94B" stroke-width="1.2" stroke-dasharray="4 3"/>
+<text class="tn" x="556" y="118" fill="#F3C94B">loss cone</text>
+<rect x="622" y="92" width="14" height="96" rx="3" fill="#F3C94B"/>
+<text class="tn" x="629" y="208" text-anchor="middle" fill="#F3C94B">DEC</text>
+<path d="M140 130 L52 100" stroke="#F3C94B" stroke-width="2"/>
+<path d="M140 150 L52 180" stroke="#F3C94B" stroke-width="2"/>
+<rect x="34" y="92" width="14" height="96" rx="3" fill="#F3C94B"/>
+<text class="tn" x="41" y="208" text-anchor="middle" fill="#F3C94B">DEC</text>
+<rect x="166" y="60" width="334" height="10" rx="3" fill="#4FC9A5"/>
+<rect x="166" y="210" width="334" height="10" rx="3" fill="#4FC9A5"/>
+<text class="tn" x="333" y="52" text-anchor="middle" fill="#4FC9A5">blanket &mdash; catches neutrons, makes heat and tritium</text>
+<text class="tn" x="333" y="236" text-anchor="middle" fill="#4FC9A5">blanket</text>
+<text class="tn" x="350" y="266" text-anchor="middle">Neutrons go sideways into the blanket. Charged particles leak out the ends &mdash; and that is where the electricity comes from.</text>
+</svg>
+<figcaption>Fig 1 &mdash; Simple linear geometry: two high-field coils, a plasma between them, open ends by design.</figcaption>
+</figure>
+
+<p>Two coils create high field regions at each end. Particles moving toward a coil see a rising field and get reflected &mdash; but only if their velocity vector sits outside the <strong>loss cone</strong>. Anything scattered into the cone escapes out the end. Mirrors are inherently leaky, and that killed the concept in the 1970s.</p>
+
+<p>Realta's framing, from their CSO, is that the leakiness becomes <strong>a feature rather than a hurdle</strong>: those escaping particles are charged and directional, so you can decelerate them against an electric field and collect real current. That is direct energy conversion, and it only works on open-ended machines &mdash; a tokamak has nowhere for the particles to go.</p>
+
+<div class="eqbox">their stated power plant split:
+  80% of fusion power through a thermal cycle at up to 45% efficiency
+  20% through DEC at over 90% efficiency
+
+  blended:  0.8 &times; 0.45 + 0.2 &times; 0.90  =  0.54
+
+  ~54% overall against ~45% for a pure thermal cycle</div>
+
+<p>That nine-point gain is the commercial argument for DEC, and being able to do that arithmetic out loud shows you read past the headline.</p>
+
+<div class="sechead">
+<h2>04 &middot; Where the thermal-fluids problems actually live</h2>
+<p class="secnote">This is your map. A mirror puts the hard heat-flux problems in different places than a tokamak does.</p>
+</div>
+
+<figure class="fig">
+<svg viewBox="0 0 700 250" role="img" aria-label="Four thermal problem areas in a mirror machine ranked by relevance to a high heat flux experimentalist">
+<rect x="40" y="46" width="620" height="38" rx="4" fill="#2A1A14" stroke="#F2703C"/>
+<text class="tb" x="58" y="70">End wall and expander &mdash; concentrated charged-particle flux, the biggest HHF surface</text>
+<rect x="40" y="94" width="620" height="38" rx="4" fill="#2A2414" stroke="#F3C94B"/>
+<text class="tb" x="58" y="118">DEC electrodes &mdash; high heat flux on a surface held at high voltage</text>
+<rect x="40" y="142" width="620" height="38" rx="4" fill="#122A24" stroke="#4FC9A5"/>
+<text class="tb" x="58" y="166">Blanket &mdash; neutron heating, tritium breeding, and the outlet temperature is the product</text>
+<rect x="40" y="190" width="620" height="38" rx="4" fill="#1A2430" stroke="#5FA8E8"/>
+<text class="tb" x="58" y="214">Heating systems &mdash; gyrotron collectors and beam dumps, classic CHF-limited hardware</text>
+</svg>
+<figcaption>Fig 2 &mdash; You have directly relevant experience on three of these four.</figcaption>
+</figure>
+
+<h3>The expander, and the one bit of mirror physics worth knowing</h3>
+<p>All that end-loss power has to land somewhere. The trick is <strong>magnetic expansion</strong>: as the field drops along the expander, the flux tube cross-section grows as 1/B, so the same power spreads over a much larger area. Expand from a 17 T throat down to 0.05 T at the end wall and the area grows by a factor of a few hundred, taking an impossible heat flux down to something an actively cooled surface can handle.</p>
+
+<div class="say">Worth saying: <em>"So the end wall heat flux is set by how much magnetic expansion you can buy, and that trades against vessel size and magnet cost. Where does that land on Anvil?"</em> That is a real question and it shows you understand the architecture rather than just the vocabulary.</div>
+
+<h3>Gyrotron collectors &mdash; hardware they just bought</h3>
+<div class="eqbox">a 1 MW gyrotron at ~50% wall-plug efficiency dumps ~1 MW into its collector
+spread over ~0.5 m&sup2; with beam sweeping  &rarr;  ~2 MW/m&sup2;  =  ~200 W/cm&sup2;
+CHF in subcooled flow boiling is the design limit</div>
+<p>They purchased gyrotrons from Kyoto Fusioneering in March. Collector cooling is a textbook CHF-limited problem, and it is hardware arriving now rather than a 2035 concern. Naming it is very specific and very current.</p>
+
+<div class="sechead">
+<h2>05 &middot; Your pitch &mdash; the timing argument</h2>
+<p class="secnote">This is the whole call in one idea. Lead with it.</p>
+</div>
+
+<div class="say">"You're fitting out the Forge and starting Hammir construction this year. A machine at that stage needs someone to build and instrument the test loops and get real data off hardware before it goes on the machine. That's what I've done for four years &mdash; boiling and evaporation rigs, high-density thermocouple arrays, flow control, degassing, DAQ, and the debugging that goes with it. I'd like to be the person who does that here."</div>
+
+<p>That is a better pitch than any list of skills, because it names a need created by a decision they just made. A company standing up a new facility always has more instrumentation and commissioning work than people to do it, and it is almost never anyone's dedicated job.</p>
+
+<h3>Your spoken opening &mdash; about forty-five seconds</h3>
+<div class="say">"Thanks for making time. Short version: I'm a thermal-fluids experimentalist. Two years at Illinois on pool boiling and falling-film evaporation, which turned into two papers. Then high-heat-flux capillary evaporation and CHF characterisation at UCSD. Then Zap's advanced materials group, working on liquid-metal blanket alloys and porous tungsten &mdash; eutectic determination by STA and DSC, SEM and EDX, permeability modelling. Right now I'm a DOE ORISE fellow doing power system modelling, and that wraps in two weeks. I reached out because of the Forge and Hammir timing."</div>
+
+<div class="callout">
+<div class="lbl">Fix this before the call</div>
+Your email says you characterised CHF <strong>up to 600 W/cm&sup2;</strong>. Your r&eacute;sum&eacute; says 600 W in one bullet and 600 W/cm&sup2; in another. <b>Know the heated area of the GB-140 samples.</b> A materials PhD from Intel will ask, and an undefended order of magnitude on your own data would undo everything else. Also be precise that your CHF work was <em>capillary-fed thin-film evaporation and pool boiling</em>, not subcooled flow boiling in channels. The methodology, instrumentation and dryout physics transfer completely &mdash; say that, rather than letting him assume flow boiling and discover otherwise.
+</div>
+
+<div class="sechead">
+<h2>06 &middot; Questions he may ask</h2>
+</div>
+<div class="grid" id="grid"></div>
+
+<div class="sechead">
+<h2>07 &middot; Ask him</h2>
+<p class="secnote">Four at most. The first two are the ones that matter.</p>
+</div>
+<ul>
+<li>"Where does thermal-fluids sit at Realta today &mdash; is there a group, or is it distributed across the machine engineers?"</li>
+<li>"What's the highest heat flux surface on Anvil, and is the plan for it settled or still open?"</li>
+<li>"Fitting out the Forge &mdash; what test capability do you need that doesn't exist yet? Loops, calorimetry, thermal-hydraulic rigs?"</li>
+<li>"How much expansion ratio are you buying at the end cells, and what sets the limit?"</li>
+<li>"Is DEC electrode cooling solved? Cooling a surface that's at high voltage and high heat flux at the same time sounds like a genuinely awkward problem."</li>
+<li>"Selling process heat means the blanket outlet temperature is effectively a product spec. Does the customer temperature requirement flow back into the blanket design?"</li>
+<li>"Gyrotron collector cooling &mdash; is that coming as a package from Kyoto Fusioneering or is it yours to solve?"</li>
+<li>"What surprised you when you went from Intel R&amp;D to fusion hardware?" <em>&mdash; if the conversation is warm, this one is a gift.</em></li>
+</ul>
+
+<div class="sechead">
+<h2>08 &middot; Practical</h2>
+</div>
+<ul>
+<li><strong>Relocation will come up.</strong> Realta is Madison-based with hands-on lab work at UW's Physical Sciences Laboratory and soon at OM Station. Have a clear answer. Your Illinois undergrad makes the Midwest an easy story if you want it to be.</li>
+<li><strong>Say the fellowship end date.</strong> Two weeks is useful information, not a weakness &mdash; it means you are available now, which for a company mid-buildout is an advantage. State it plainly and without apology.</li>
+<li><strong>He is not the hiring manager for a role that exists.</strong> You proposed one. Expect him to ask you to define it more sharply, and expect the honest answer to be that they will need to think about where it fits. Close with <em>"who else should I talk to?"</em></li>
+<li><strong>Zap.</strong> You worked at a competitor. Be normal about it: describe methods and reasoning, not proprietary compositions, and say so once up front.</li>
+</ul>
+
+<div class="sechead">
+<h2>09 &middot; Cheat card</h2>
+</div>
+<div class="eqbox">HIM: Dominick Bindl, VP Technical Development. Materials science PhD, UW-Madison.
+     Ex-Intel R&D. Wisconsin native. NOT a plasma physicist. Confirm the title.
+
+THEM: Mirror fusion. WHAM at UW (17 T HTS, first plasma Jul 2024).
+      DEC demonstrated 19 Jun 2026 - first private company to do it.
+      CFS magnet deal Apr 2026. Kyoto Fusioneering gyrotrons Mar 2026.
+      Realta Forge at OM Station, Madison. Hammir construction starts this year.
+      Anvil = prototype + volumetric neutron source. Q>=1 target 2028.
+      Market: industrial process heat. ~50 people. $140M raised.
+
+PHYSICS: loss cone makes mirrors leaky -> DEC turns that into a feature.
+         Magnetic expansion spreads end-loss power: area ~ 1/B.
+         80% thermal at 45% + 20% DEC at 90% = ~54% blended.
+
+LEAD WITH: Forge + Hammir timing. Someone has to build and instrument the loops.
+KNOW: the heated area behind your 600 W/cm2 number.
+CLOSE WITH: who else should I talk to?</div>
+
+<footer>
+Assembled from public reporting in August 2026: Realta and CFS press releases, the Kyoto Fusioneering announcement, ANS coverage of the DEC demonstration, WisBusiness and ANS coverage of the Realta Forge, and a WEDC profile of Dominick Bindl. Titles and machine details may have moved since &mdash; treat everything here as a starting point he is entitled to correct.
+</footer>
+</div>
+
+<script>
+var C={you:"var(--pl)",tech:"var(--mag)",mat:"var(--blk)",fit:"var(--dec)"};
+var Q=[
+{c:"you",t:"Your data",q:"What was the CHF number, and on what?",a:"Give the flux, the sample, and the <b>heated area</b> in one breath. GB-140 glass-fibre membranes, capillary-fed thin-film evaporation, flux ramped until the departure from linear q&Prime; versus &Delta;T signalled incipient dryout. If you cannot recall the area, say you would check your notes rather than misquote &mdash; that answer is fine and a wrong number is not."},
+{c:"you",t:"Your data",q:"Is that pool boiling CHF or flow boiling CHF?",a:"Neither, precisely, and say so. Your work was <b>capillary-fed thin-film evaporation</b> at UCSD and <b>pool boiling</b> at UIUC. Subcooled flow boiling in channels &mdash; what a gyrotron collector or a divertor uses &mdash; is a third mechanism. The dryout physics, the instrumentation and the experimental method all transfer; the correlation does not. Being precise here is a credibility win, not a loss."},
+{c:"you",t:"Your data",q:"Describe a loop you built.",a:"Pick the UCSD evaporation rig or the UIUC falling-film loop and walk it: reservoir, degassing, pump or gravity feed, flow control, heated test section, high-density thermocouples, pressure taps, DAQ, high-speed imaging. Then name a real failure &mdash; the water level dropping below the chamber inlet and killing the driving head is a good one because the diagnosis was a pressure-balance argument, not a parts checklist."},
+{c:"you",t:"Your data",q:"Tell me about the Zap materials work.",a:"His home turf, so go slow and be concrete. Inert glovebox alloy preparation, eutectic determination for a novel alloy family by STA with TGA and DSC, microstructure by SEM/EDX and optical. Separately porous tungsten: COMSOL for porosity and permeability, Archimedes for density as the independent check. Flag the proprietary boundary once, calmly, then talk methods freely."},
+{c:"mat",t:"Materials",q:"Why a eutectic?",a:"Lowest melting point in the system, and it freezes at a single temperature rather than through a mushy range &mdash; so the whole loop's minimum temperature requirement drops and you never solidify metal in a pipe. On a DSC the eutectic composition shows one sharp endotherm instead of separate solidus and liquidus events."},
+{c:"mat",t:"Materials",q:"What does Archimedes not tell you?",a:"Whether the porosity is <b>connected</b>. It gives bulk density including closed pores with no geometry assumption, so you get total porosity. Only connected porosity wicks, and connectivity needs a flow or intrusion measurement. That distinction is exactly the kind of thing a materials PhD will enjoy you making unprompted."},
+{c:"tech",t:"Their machine",q:"What do you know about magnetic mirrors?",a:"Two coils, high field at each end, particles reflected unless they scatter into the <b>loss cone</b>. Inherently leaky, which is what sidelined the concept decades ago. Realta's move is to treat the leak as the product &mdash; escaping charged particles are decelerated against a field and collected as current. Then stop and ask him something rather than continuing."},
+{c:"tech",t:"Their machine",q:"Why is DEC interesting commercially?",a:"It bypasses the Carnot limit for part of the power. Their stated plant split is 80% through a thermal cycle at up to 45% and 20% through DEC at over 90%, which blends to about <span class='n'>54%</span> against 45% for pure thermal. Roughly a nine-point gain in overall efficiency, and it is only available to open-ended machines."},
+{c:"tech",t:"Their machine",q:"What's hard thermally about a mirror versus a tokamak?",a:"The heat is split differently. Neutrons go radially into the blanket much as anywhere else, but a large fraction of the power leaves as <b>charged particles out the two ends</b>, concentrated into whatever area the magnetic expansion gives you. So the hardest high-heat-flux surface is an end wall or converter electrode, not a divertor strike point. The upside is that the geometry is a simple axisymmetric cylinder, which makes the blanket far more tractable."},
+{c:"tech",t:"Their machine",q:"What is magnetic expansion and why does it matter?",a:"Flux tube area scales as <b>1/B</b>, so letting the field fall along the expander spreads the end-loss power over a much larger surface. Going from a 17 T throat to tens of millitesla buys a few hundred times the area. It is the main lever on end-wall heat flux, and it trades against vessel size and magnet cost."},
+{c:"tech",t:"Their machine",q:"What's awkward about cooling a DEC electrode?",a:"It sits at high potential and takes high heat flux at the same time. You cannot simply plumb it to a grounded coolant loop &mdash; you need insulating breaks, controlled coolant conductivity, and standoff distances that survive the thermal design. Raising this as a question rather than an answer is the right move; it shows you thought past the physics into the hardware."},
+{c:"tech",t:"Their machine",q:"Why does industrial process heat change the thermal design?",a:"Because the <b>outlet temperature becomes a product specification</b>, not just an engineering parameter. A customer needing 500 &deg;C steam sets a floor on blanket outlet temperature, which sets coolant choice, structural material and the whole thermal-hydraulic design. Selling heat rather than electricity pushes the requirement upstream into the blanket."},
+{c:"fit",t:"Fit",q:"What role do you actually want?",a:"You proposed it, so be ready to sharpen it. Something like: <em>own the thermal-fluids test hardware &mdash; design, build and instrument the loops and calorimetry that qualify components before they go on the machine, and correlate the models against what the rigs measure.</em> Concrete, bounded, and clearly a real need during a facility buildout."},
+{c:"fit",t:"Fit",q:"Why fusion, and why Realta?",a:"Keep it honest and short. Your last four years have been high-heat-flux and capillary-fed evaporation, you spent a year on liquid-metal blanket materials, and mirror machines put those problems front and centre. Then the specific reason: they are building a facility and a machine right now, which is when test engineering matters most. Avoid anything that sounds like a mission statement."},
+{c:"fit",t:"Fit",q:"You worked at Zap. Is that a problem?",a:"Handle it in one sentence, up front: some compositions are proprietary so you will describe methods and reasoning rather than specifics, and you are happy to go as deep as he likes on technique. Said before he asks, it reads as trustworthy. Never volunteer a composition to seem impressive."},
+{c:"fit",t:"Fit",q:"When are you available?",a:"Your fellowship ends in two weeks, so <b>immediately</b>. For a company fitting out a facility and starting machine construction this year, that is an advantage. Say it plainly and without apologising for it."}
+];
+document.getElementById("grid").innerHTML=Q.map(function(p,i){
+ return '<article class="card" style="--c:'+C[p.c]+'"><div class="hd"><span class="pid">'+String(i+1).padStart(2,"0")+'</span><span class="ptag">'+p.t+'</span></div><button class="qbtn">'+p.q+'</button><div class="ans">'+p.a+'</div></article>';
+}).join("");
+document.addEventListener("click",function(e){var b=e.target.closest(".qbtn");if(b)b.closest(".card").classList.toggle("open");});
+</script>

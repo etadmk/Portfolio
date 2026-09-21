@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tony White — Blue Robotics — Call Card</title>
+<style>
+  :root{
+    --bg:#ffffff; --ink:#16212b; --mute:#5b6f7e; --faint:#8a9aa6;
+    --rule:#dde5ea; --panel:#f5f8fa; --accent:#0d6d8f; --warn:#a8442a;
+    --warnbg:#fdf3ef; --warnrule:#f0d5cb;
+  }
+  :root:not([data-theme="light"]){ }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#0e1519; --ink:#e6eef2; --mute:#9db0bc; --faint:#6f8593;
+      --rule:#24323b; --panel:#141e25; --accent:#5ec1e0; --warn:#e0805f;
+      --warnbg:#201612; --warnrule:#3d2a20;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#0e1519; --ink:#e6eef2; --mute:#9db0bc; --faint:#6f8593;
+    --rule:#24323b; --panel:#141e25; --accent:#5ec1e0; --warn:#e0805f;
+    --warnbg:#201612; --warnrule:#3d2a20;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font:15px/1.5 "Charter","Bitstream Charter","Iowan Old Style",Georgia,serif;
+    -webkit-text-size-adjust:100%;
+  }
+  .wrap{max-width:780px;margin:0 auto;padding:26px 22px 44px}
+  header{border-bottom:1px solid var(--rule);padding-bottom:12px;margin-bottom:18px}
+  h1{font-size:19px;margin:0 0 3px;letter-spacing:.2px}
+  .sub{color:var(--mute);font-size:13px}
+  h2{
+    font-size:11px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--accent);margin:22px 0 8px;font-weight:700;
+    font-family:system-ui,-apple-system,"Segoe UI",sans-serif;
+  }
+  .say{
+    background:var(--panel);border:1px solid var(--rule);border-radius:7px;
+    padding:13px 15px;margin:0 0 10px;
+  }
+  .say p{margin:0}
+  .why{color:var(--mute);font-size:13.5px;margin:5px 0 16px;padding-left:2px}
+  b{font-weight:700}
+  ol{margin:0;padding-left:20px}
+  ol li{margin-bottom:14px}
+  ol li::marker{color:var(--faint);font-weight:700}
+  .note{
+    background:var(--warnbg);border:1px solid var(--warnrule);border-radius:7px;
+    padding:12px 15px;margin-top:8px;
+  }
+  .note ul{margin:0;padding-left:18px}
+  .note li{margin:3px 0;font-size:14px}
+  .note strong{color:var(--warn)}
+  .foot{color:var(--faint);font-size:12.5px;margin-top:24px;
+    border-top:1px solid var(--rule);padding-top:10px}
+  @media print{
+    body{background:#fff;color:#000;font-size:11.5pt}
+    .wrap{max-width:none;padding:0}
+    h2{color:#000;margin:14px 0 6px}
+    .say,.note{background:#fff;border:1px solid #bbb}
+    .foot{page-break-inside:avoid}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>Tony White &middot; Blue Robotics &middot; Applications Engineer</h1>
+  <div class="sub">He is customer-facing. Ask what he sees in the field, not what the company should do.</div>
+</header>
+
+<h2>Open &mdash; 20 seconds, then stop</h2>
+<div class="say"><p>&ldquo;Hi Tony, thanks for making time. I&rsquo;m a mechanical engineer in Seattle, wrapping up a DOE fellowship at MarineSitu &mdash; power budgeting and duty cycling for instrumentation on buoys and tidal sites, working out how to keep a sensor package alive on a small solar and battery budget from Hawaii up to Anchorage. Before that I was doing thermal-fluids test engineering: building rigs, instrumenting them, chasing down why the data looked wrong. I&rsquo;ve been curious about Blue Robotics for a while, and what I most wanted to ask you about is the field side &mdash; you see what happens to this gear after it leaves Torrance, and I don&rsquo;t think many people ask you about that.&rdquo;</p></div>
+
+<h2>Ask two or three &mdash; follow the one he warms to</h2>
+<ol>
+  <li>
+    <b>Field failures.</b> &ldquo;When something comes back from a customer with a problem &mdash; is it usually the hardware itself, or how it got integrated?&rdquo;
+    <div class="why">&hellip; I&rsquo;ve spent a lot of time on rigs where the failure was instrumentation, not physics. Curious what the equivalent is for you.</div>
+  </li>
+  <li>
+    <b>BlueBoat endurance.</b> &ldquo;How much of what customers ask you about is endurance &mdash; what they can run, and for how long?&rdquo;
+    <div class="why">&hellip; I spent the last year doing that arithmetic for buoys. Is it a question people arrive with, or one they discover three weeks in?</div>
+  </li>
+  <li>
+    <b>Heat in the enclosures.</b> &ldquo;Are you seeing people put more compute into the watertight enclosures &mdash; edge processing, bigger sonar?&rdquo;
+    <div class="why">&hellip; I&rsquo;d assume heat becomes a question at some point. Showing up yet, or still theoretical?</div>
+  </li>
+  <li>
+    <b>Long deployments.</b> &ldquo;For gear that sits in the water for months &mdash; what degrades first?&rdquo;
+    <div class="why">&hellip; I did a couple of years on scaling and anti-fouling surfaces. How much of that is a real operational problem versus something people worry about?</div>
+  </li>
+</ol>
+
+<h2>The one offer &mdash; only if he opens the door</h2>
+<div class="say"><p>&ldquo;That&rsquo;s the thing I&rsquo;d most want to work on. The buoy work was the same shape of problem: known generation, unknown loads, and a battery you can&rsquo;t let fall over. Happy to send you what I built if it&rsquo;s ever useful.&rdquo;</p></div>
+<div class="why">Say it once. Don&rsquo;t say it if he doesn&rsquo;t open the door.</div>
+
+<h2>Close</h2>
+<div class="say"><p>&ldquo;This was really useful, thank you. Two things before I let you go &mdash; is there anyone on the engineering or test side you&rsquo;d point me toward? And if someone with my background wanted to be useful at Blue Robotics, what would you want to see from them?&rdquo;</p></div>
+<div class="why">The second one asks for advice he can give, not a decision he can&rsquo;t make.</div>
+
+<h2>Guardrails</h2>
+<div class="note">
+  <ul>
+    <li><strong>No pitching.</strong> If a question of mine has a job inside it, cut the job out.</li>
+    <li><strong>Don&rsquo;t lead with 600 W/cm&sup2; or fusion.</strong> Wrong world. Marine first; the rest only if asked.</li>
+    <li><strong>Torrance.</strong> Have one line ready on location before he has to ask.</li>
+    <li><strong>End five minutes early.</strong> Giving time back is the proof it wasn&rsquo;t wasted.</li>
+  </ul>
+</div>
+
+<div class="foot">Seattle &middot; 217-200-3419 &middot; etadmk@gmail.com &middot; linkedin.com/in/aditikalle</div>
+
+</div>
+</body>
+</html>

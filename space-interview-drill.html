@@ -1,0 +1,381 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Space systems drill</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0B111C; --panel:#121B2A; --panel2:#0F1724; --line:#1F2E44; --line2:#2C4160;
+  --ink:#E4EBF4; --mute:#8496AD; --dim:#5B6D86;
+  --orb:#6E9BF7; --rad:#EC6BAA; --thr:#F5843B; --fld:#35C7C0; --prp:#F3C24B; --str:#89D653; --pwr:#B189F2;
+  --focus:#8FB4FF;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{
+  background:var(--bg); color:var(--ink);
+  font-family:"IBM Plex Sans",system-ui,sans-serif; font-size:15px; line-height:1.6;
+  padding:0 0 80px;
+  background-image:linear-gradient(180deg,#101A2B 0%,#0B111C 420px);
+}
+.wrap{max-width:1180px;margin:0 auto;padding:0 22px}
+.mono{font-family:"IBM Plex Mono",monospace}
+.cond{font-family:"Barlow Condensed",sans-serif;letter-spacing:.04em}
+
+header.top{padding:44px 0 26px;border-bottom:1px solid var(--line)}
+.eyebrow{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--dim)}
+h1{font-family:"Barlow Condensed",sans-serif;font-weight:600;font-size:clamp(38px,7vw,64px);line-height:.98;letter-spacing:.01em;text-transform:uppercase;margin:10px 0 12px}
+h1 em{font-style:normal;color:var(--orb)}
+.lede{color:var(--mute);max-width:62ch;font-size:15.5px}
+
+.board{display:grid;grid-template-columns:repeat(auto-fit,minmax(128px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);margin:26px 0 0}
+.cell{background:var(--panel2);padding:11px 13px}
+.cell .k{font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)}
+.cell .v{font-family:"Barlow Condensed",sans-serif;font-size:27px;font-weight:500;line-height:1.1;margin-top:2px}
+
+.controls{position:sticky;top:0;z-index:20;background:rgba(11,17,28,.93);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);padding:12px 0;margin-bottom:30px}
+.chips{display:flex;flex-wrap:wrap;gap:7px;align-items:center}
+button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
+.chip{font-family:"IBM Plex Mono",monospace;font-size:11.5px;letter-spacing:.09em;text-transform:uppercase;padding:6px 11px;border:1px solid var(--line2);color:var(--mute);border-radius:2px;transition:background .15s,color .15s,border-color .15s}
+.chip:hover{border-color:var(--dim);color:var(--ink)}
+.chip[aria-pressed="true"]{background:var(--c,var(--ink));color:#0B111C;border-color:var(--c,var(--ink));font-weight:500}
+.spacer{flex:1}
+.txtbtn{font-family:"IBM Plex Mono",monospace;font-size:11.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--dim);padding:6px 4px;border-bottom:1px solid transparent}
+.txtbtn:hover{color:var(--ink);border-bottom-color:var(--line2)}
+
+h2.sec{font-family:"Barlow Condensed",sans-serif;font-weight:600;font-size:30px;text-transform:uppercase;letter-spacing:.05em;margin:0 0 4px}
+.secnote{color:var(--dim);font-size:13.5px;margin-bottom:20px}
+.sechead{border-top:1px solid var(--line);padding-top:26px;margin-top:56px}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:14px}
+.card{background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--c);position:relative;display:flex;flex-direction:column}
+.card:focus-within{outline:2px solid var(--focus);outline-offset:2px}
+.card .hd{display:flex;align-items:center;gap:9px;padding:11px 14px 0}
+.pid{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.1em;color:var(--c)}
+.ptag{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)}
+.qbtn{text-align:left;padding:7px 14px 13px;width:100%;font-size:14.5px;line-height:1.5;color:var(--ink)}
+.qbtn:hover{color:#fff}
+.qbtn::after{content:"tap to solve";display:block;font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--dim);margin-top:9px}
+.card.open .qbtn::after{content:"hide"}
+.ans{display:none;padding:13px 14px 15px;border-top:1px dashed var(--line2);background:var(--panel2);font-size:14px;color:#C9D6E6}
+.card.open .ans{display:block}
+.ans b{color:var(--c);font-weight:500;font-family:"IBM Plex Mono",monospace;font-size:13.5px}
+.ans .num{font-family:"IBM Plex Mono",monospace;color:#fff}
+
+.big{background:var(--panel);border:1px solid var(--line);border-top:3px solid var(--c);margin-bottom:16px}
+.big .bh{padding:16px 18px 0;display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
+.big h3{font-family:"Barlow Condensed",sans-serif;font-weight:600;font-size:23px;text-transform:uppercase;letter-spacing:.03em;flex:1;min-width:200px}
+.given{margin:10px 18px 0;padding:11px 13px;background:var(--panel2);border-left:2px solid var(--line2);font-family:"IBM Plex Mono",monospace;font-size:12.5px;color:var(--mute);line-height:1.75}
+.bigbtn{display:block;width:100%;text-align:left;padding:14px 18px;font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)}
+.bigbtn:hover{color:var(--ink)}
+.work{display:none;padding:0 18px 20px}
+.big.open .work{display:block}
+.work ol{margin:0 0 14px 18px}
+.work li{margin-bottom:9px;font-size:14px;color:#C9D6E6}
+.work .res{padding:12px 14px;background:var(--panel2);border-left:2px solid var(--c);font-size:14px}
+.work .res strong{color:var(--c);font-weight:500}
+
+footer{margin-top:60px;border-top:1px solid var(--line);padding-top:20px;color:var(--dim);font-size:12.5px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+@media (max-width:560px){.grid{grid-template-columns:1fr}h1{font-size:36px}}
+</style>
+
+<div class="wrap">
+<header class="top">
+  <div class="eyebrow">Interview drill · rev A</div>
+  <h1>Space systems<br><em>quick recall</em></h1>
+  <p class="lede">One hundred single-step problems you should be able to answer in under a minute, plus ten multi-step ones you should be able to walk a whiteboard through. Numbers are order-of-magnitude and stated with their assumptions — quote them that way.</p>
+  <div class="board" id="board"></div>
+</header>
+</div>
+
+<div class="controls">
+  <div class="wrap chips" id="chips"></div>
+</div>
+
+<div class="wrap">
+  <h2 class="sec">Quick problems</h2>
+  <p class="secnote">Answer out loud before you tap. If you cannot get within a factor of two, that one goes on tonight's list.</p>
+  <div class="grid" id="grid"></div>
+
+  <div class="sechead">
+    <h2 class="sec">Long problems</h2>
+    <p class="secnote">Each is a real sizing exercise. Work the steps in order — the panel cares more about the sequence than the final digit.</p>
+  </div>
+  <div id="bigs"></div>
+
+  <footer>
+    Constants used throughout: μ<sub>E</sub> = 398,600 km³/s² · R<sub>E</sub> = 6,371 km · σ = 5.67×10⁻⁸ W/m²K⁴ · solar constant 1,361 W/m² · g₀ = 9.807 m/s².
+  </footer>
+</div>
+
+<script>
+const CATS={
+ orb:{n:"Orbits",c:"var(--orb)"},rad:{n:"Radiation",c:"var(--rad)"},thr:{n:"Thermal",c:"var(--thr)"},
+ fld:{n:"Fluids",c:"var(--fld)"},prp:{n:"Propulsion",c:"var(--prp)"},str:{n:"Structures",c:"var(--str)"},pwr:{n:"Power",c:"var(--pwr)"}
+};
+
+const Q=[
+{c:"orb",q:"Circular orbital velocity at 400 km altitude?",a:"v = √(μ/r), r = 6371 + 400 = 6771 km. <span class='num'>v ≈ 7.67 km/s</span>. Every LEO number you quote should hang off this one."},
+{c:"orb",q:"Orbital period at 400 km?",a:"T = 2π√(r³/μ) = 2π√(3.10×10¹¹/398600) ≈ 5545 s = <span class='num'>92.4 min</span>. About <span class='num'>15.6 orbits per day</span>."},
+{c:"orb",q:"Escape velocity from a 400 km circular orbit, and the Δv to get there?",a:"v_esc = √2 × v_circ = 1.414 × 7.67 = <span class='num'>10.85 km/s</span>. Δv from circular = <span class='num'>3.18 km/s</span>."},
+{c:"orb",q:"Radius and velocity of geostationary orbit?",a:"T = 86,164 s (sidereal day). r = (μT²/4π²)^⅓ = 42,164 km, so altitude <span class='num'>35,786 km</span>. v = √(μ/r) = <span class='num'>3.07 km/s</span>."},
+{c:"orb",q:"Total Δv for a Hohmann transfer from 400 km LEO to GEO?",a:"Perigee burn 10.07 − 7.67 = 2.40 km/s. Apogee burn 3.07 − 1.62 = 1.46 km/s. Total <span class='num'>≈ 3.86 km/s</span> — and that is before the ~28° plane change from a mid-latitude launch site."},
+{c:"orb",q:"What fraction of a 400 km orbit is spent in eclipse at zero beta angle?",a:"Cylindrical shadow: sin θ = R_E/r = 6371/6771 = 0.941, θ = 70.3°. Shadow arc = 140.6° of 360 → <span class='num'>39%</span>, about <span class='num'>36 minutes</span> per orbit. This sets your battery sizing."},
+{c:"orb",q:"What is beta angle and why does the thermal engineer care?",a:"Angle between the orbit plane and the sun vector. <b>β = 90°</b> means full sun, no eclipse, hot case and no battery cycling. <b>β = 0°</b> gives maximum eclipse, cold case, deepest discharge. Both extremes are design cases."},
+{c:"orb",q:"Why is a sun-synchronous orbit retrograde?",a:"You need the J2 nodal regression to equal Earth's orbital rate, 0.9856°/day eastward. Prograde orbits regress westward, so only inclinations above 90° give the right sign. At 700 km that is <span class='num'>i ≈ 98.2°</span>."},
+{c:"orb",q:"Drag force on a 10 m² satellite at 400 km?",a:"F = ½ρv²C_dA with ρ ≈ 2×10⁻¹² kg/m³, C_d ≈ 2.2. F = 0.5 × 2e−12 × 7670² × 2.2 × 10 ≈ <span class='num'>1.3 mN</span>. Tiny, but it never stops."},
+{c:"orb",q:"Δv per day to hold 400 km against that drag, for a 1000 kg satellite?",a:"a = F/m = 1.3×10⁻⁶ m/s². Over a day: 1.3e−6 × 86400 ≈ <span class='num'>0.11 m/s/day</span>, roughly <span class='num'>40 m/s per year</span>. Multiply by mission life for the tank."},
+{c:"orb",q:"What is ballistic coefficient and which way is better for orbit life?",a:"B = m/(C_d A). <b>High B</b> = heavy and compact = slow decay. A deployed solar array drops B hard, which is why some satellites feather arrays to survive and drag sails do the opposite to deorbit."},
+{c:"orb",q:"Why does 400 km density vary by an order of magnitude?",a:"Solar EUV heats and inflates the thermosphere. Over the 11-year solar cycle, density at 400 km swings roughly <span class='num'>10×</span>. Your lifetime prediction is only as good as your solar flux forecast."},
+{c:"orb",q:"Δv to raise altitude by 1 km from 400 km?",a:"For small changes Δv_total ≈ v·Δa/(2a) = 7670 × 1/(2 × 6771) ≈ <span class='num'>0.57 m/s</span>, split between two burns. Cheap — which is why altitude is the easy axis and inclination is not."},
+{c:"orb",q:"Δv for a 1° inclination change in LEO?",a:"Δv = 2v sin(Δi/2) = 2 × 7670 × sin(0.5°) ≈ <span class='num'>134 m/s</span>. Per degree. This is why you buy the right launch, and why plane changes are done at apogee where v is low."},
+{c:"orb",q:"Why launch east, and how much does it buy?",a:"Earth's surface speed is 465 m/s at the equator, scaling with cos(latitude). From Cape Canaveral (28.5°N) that is about <span class='num'>410 m/s</span> free. It also constrains achievable inclination — you cannot launch below your site latitude without a dogleg."},
+{c:"orb",q:"What does J2 do to a LEO orbit?",a:"Earth's oblateness precesses the node (regression) and rotates the argument of perigee. It is the largest perturbation in LEO by far — exploited for sun-synchronous orbits and frozen orbits, fought everywhere else."},
+
+{c:"rad",q:"Where are the Van Allen belts, and does LEO sit inside them?",a:"Inner belt (protons) roughly <span class='num'>1,000–6,000 km</span>; outer belt (electrons) roughly <span class='num'>13,000–60,000 km</span>. A 400 km orbit sits below both — except over the South Atlantic Anomaly."},
+{c:"rad",q:"What is the South Atlantic Anomaly and why does it dominate LEO upsets?",a:"Earth's dipole is offset and tilted, so the inner proton belt dips to about <span class='num'>200 km</span> over the South Atlantic. Most LEO single-event upsets happen in those few minutes per pass."},
+{c:"rad",q:"What units is total ionising dose in, and what is a typical LEO number?",a:"<b>krad(Si)</b>. Roughly <span class='num'>2–10 krad</span> over five years at 400 km behind 100 mil of aluminium. GEO is far worse — tens of krad per year. Always quote dose with the shielding assumption attached."},
+{c:"rad",q:"Why is aluminium a poor shield against trapped electrons?",a:"High-energy electrons decelerating in a high-Z or thick material generate <b>bremsstrahlung</b> X-rays that penetrate further than the electrons did. Graded-Z shielding — aluminium outside, tantalum or tungsten inside — absorbs the secondaries."},
+{c:"rad",q:"Distinguish SEU, SEL, SET and SEFI.",a:"<b>Upset</b> — a flipped bit, recoverable. <b>Latchup</b> — a parasitic thyristor draws destructive current, needs a power cycle or it burns. <b>Transient</b> — a voltage glitch on an analogue line. <b>Functional interrupt</b> — the device stops behaving and needs a reset."},
+{c:"rad",q:"How do you mitigate single-event latchup?",a:"Current-limiting on every load switch, fast detection with autonomous power cycling, a watchdog, and where budget allows a silicon-on-insulator process that has no parasitic path at all."},
+{c:"rad",q:"What is displacement damage and what does it kill?",a:"Non-ionising energy loss knocking atoms out of the lattice. It degrades <b>solar cells, CCDs and CMOS imagers, optocouplers and LEDs</b> — anything whose performance depends on minority carrier lifetime. It is a separate budget from TID."},
+{c:"rad",q:"Which environment drives worst-case dose, and which drives worst-case upset rate?",a:"<b>Solar particle events</b> — large short proton fluxes — drive the dose spike. <b>Galactic cosmic rays</b> — low flux, very high LET heavy ions — drive the upset and latchup rate, and they are worst at solar minimum."},
+{c:"rad",q:"What is LET and how is a part characterised against it?",a:"Linear energy transfer, MeV·cm²/mg. Parts are beam-tested to build a cross-section versus LET curve, fitted with a Weibull. Below the <b>threshold LET</b> nothing happens; above saturation every strike upsets."},
+{c:"rad",q:"What does atomic oxygen do in LEO, and how do you handle it?",a:"AO erodes polymers — Kapton erosion yield is about <span class='num'>3×10⁻²⁴ cm³/atom</span>. Ram-facing surfaces go first. Mitigate with a silicon dioxide or germanium coating, or put metal on the outside."},
+{c:"rad",q:"Surface charging versus deep dielectric charging.",a:"<b>Surface</b> charging comes from keV plasma, worst in GEO eclipse exit, and arcs across differentially charged surfaces. <b>Deep dielectric</b> charging comes from MeV electrons burying themselves in insulators and discharging internally. Fix with conductive coatings, grounded surfaces, and bleed paths."},
+{c:"rad",q:"Why does the thermal engineer care about UV degradation of coatings?",a:"UV and contamination raise solar absorptivity α over life while emissivity ε barely moves. So the <b>end-of-life hot case</b> is the sizing case for the radiator, and you design to EOL α, not the shiny number on the datasheet."},
+
+{c:"thr",q:"Solar constant at 1 AU, and how much does it vary?",a:"<span class='num'>1361 W/m²</span>. Earth's orbital eccentricity swings it about <span class='num'>±3.4%</span> across the year — perihelion in January is the hot case for an Earth orbiter."},
+{c:"thr",q:"The three environmental heat loads on an Earth orbiter?",a:"<b>Direct solar</b> 1361 W/m², <b>albedo</b> at about 0.3 of that reflected from the day side, and <b>Earth infrared</b> at roughly <span class='num'>237 W/m²</span> which does not switch off in eclipse."},
+{c:"thr",q:"Equilibrium temperature of an isothermal sphere at 1 AU with α/ε = 1?",a:"Absorbs on πr², radiates from 4πr². T = (S/4σ)^¼ = (1361/(4 × 5.67e−8))^¼ = <span class='num'>278.6 K, about 5°C</span>. The famous number — know the factor of four."},
+{c:"thr",q:"Flat plate facing the sun, back perfectly insulated, α/ε = 1. Temperature?",a:"Absorbs and radiates from the same area, so no factor of four. T = (S/σ)^¼ = <span class='num'>394 K, about 121°C</span>. That one geometry change is 115 K."},
+{c:"thr",q:"Same plate painted white, α/ε = 0.2. Temperature?",a:"T = (αS/εσ)^¼ = 394 × 0.2^¼ = 394 × 0.669 = <span class='num'>263 K, about −10°C</span>. Coatings are the cheapest thermal control you will ever specify."},
+{c:"thr",q:"Radiator area to reject 500 W at 300 K with ε = 0.85 to deep space?",a:"A = Q/(εσT⁴) = 500/(0.85 × 5.67e−8 × 8.1e9) = 500/390 = <span class='num'>1.28 m²</span>. If it also sees the sun, subtract the absorbed flux first and the area grows fast."},
+{c:"thr",q:"Why do radiators point at deep space, and what sink temperature do you use?",a:"Deep space is effectively <span class='num'>2.7 K</span>, so T_sink⁴ is negligible against any warm radiator — the radiator sees almost pure loss. Point it anti-sun and away from Earth, or you are re-absorbing what you just rejected."},
+{c:"thr",q:"What effective emittance does good multilayer insulation achieve?",a:"<span class='num'>ε_eff ≈ 0.01–0.03</span> for a well-made blanket. Beyond roughly 20 layers you gain almost nothing — real performance is set by <b>seams, penetrations and edges</b>, not layer count."},
+{c:"thr",q:"Heat leak through 1 m² of MLI at ε_eff = 0.02, 300 K to 100 K?",a:"Q = ε_eff σ A (T_h⁴ − T_c⁴) = 0.02 × 5.67e−8 × (8.1e9 − 1e8) ≈ <span class='num'>9 W</span>. Compare that to what a single unblanketed bolt conducts and you see why penetrations matter."},
+{c:"thr",q:"Typical thermal contact conductance across a bolted aluminium joint in vacuum?",a:"Roughly <span class='num'>500–2000 W/m²K</span>, and it is preload-dependent and hard to predict. In vacuum there is no interstitial air, so it is usually the largest single ΔT in a mounting stack. Add a filler if you need certainty."},
+{c:"thr",q:"What sets the capillary limit of a spacecraft heat pipe?",a:"Δp_cap = 2σcosθ/r_c must exceed viscous liquid loss plus vapour drop plus any adverse head. Ammonia is the usual working fluid. Ground testing must be done level or with the evaporator low, or gravity flatters the result."},
+{c:"thr",q:"When do you reach for a loop heat pipe over a constant conductance one?",a:"When you need <b>long transport distance, flexible routing, or variable conductance</b>. An LHP has a separate capillary wick only in the evaporator and smooth tubing elsewhere, so it can carry heat metres around corners."},
+{c:"thr",q:"Biot number, and what does it mean in vacuum?",a:"Bi = hL/k, internal versus external resistance. Below 0.1 the lumped capacitance model is fine. In vacuum there is no convective h — you linearise the radiative term as h_rad ≈ 4εσT³ and use that instead."},
+{c:"thr",q:"Radiative thermal time constant of a body?",a:"τ ≈ mc/(4εσAT³) from the linearised radiation term. It tells you whether a component rides through eclipse on its own thermal mass or needs a heater within minutes."},
+{c:"thr",q:"Quote α and ε for four common finishes.",a:"Black paint α 0.95 / ε 0.90. White paint α 0.20 / ε 0.90. Bare aluminium α 0.15 / ε 0.05. Optical solar reflector α 0.08 / ε 0.80. <b>Low α/ε keeps things cold in sunlight; low ε keeps things from losing heat at all.</b>"},
+{c:"thr",q:"Why is MLI outer layer sometimes aluminised and sometimes not?",a:"Depends whether you want the blanket to run hot or cold. Aluminised Kapton gives low ε and decouples radiatively. Beta cloth or ITO-coated films are chosen when you need surface conductivity for charging control as well."},
+{c:"thr",q:"How many thermal cycles does a LEO satellite see in a year?",a:"About <span class='num'>15.6 per day → roughly 5,700 per year</span>. That number is what drives solder joint fatigue, CTE mismatch cracking and hinge wear. It is the reason a five-year LEO mission is a fatigue problem, not just a strength problem."},
+{c:"thr",q:"When is a phase change material the right answer?",a:"For short, high, repeating peaks on a duty cycle — absorb latent heat during the pulse, reject slowly afterwards. Paraffins give roughly <span class='num'>200 kJ/kg</span>. Useless for steady loads; the mass just sits there."},
+{c:"thr",q:"How does a thermal louver work and what range does it give?",a:"Bimetallic actuators open blades over a radiator, swinging effective emissivity from about <span class='num'>0.1 closed to 0.7 open</span>. Fully passive, no power, but adds mechanism risk and area."},
+{c:"thr",q:"Why does every hydrazine system have line heaters?",a:"Hydrazine freezes at about <span class='num'>2°C</span> and expands on freezing, which can burst lines and valves. Survival heaters on every line, thruster and tank are non-negotiable, and their power draw is a real budget line in the cold case."},
+
+{c:"fld",q:"What is the Bond number and why does it decide propellant tank design?",a:"Bo = ρaL²/σ, body force over surface tension. In microgravity a → ~0 so <b>Bo ≪ 1</b> and surface tension dominates — liquid does not settle at the bottom, it wets the walls and floats. You cannot assume an outlet is covered."},
+{c:"fld",q:"What is a propellant management device?",a:"A capillary structure — <b>vanes, sponges, traps or galleries</b> — that uses surface tension to hold liquid over the tank outlet regardless of orientation, so you feed liquid instead of gas. The alternative is a settling burn or an elastomeric diaphragm."},
+{c:"fld",q:"Why does slosh matter to the control engineer, not just the fluids engineer?",a:"Sloshing propellant is a lightly damped mass-spring mode. If its frequency lands near the attitude control bandwidth the loop can go unstable. Fixes are baffles, diaphragms, or notching the controller."},
+{c:"fld",q:"What sets slosh frequency in a cylindrical tank?",a:"f = (1/2π)√((1.84 a/R)·tanh(1.84 h/R)) for the first lateral mode. In orbit <b>a</b> is the vehicle acceleration, not g — so slosh frequency is tiny and the mode is very lightly damped."},
+{c:"fld",q:"Write NPSH available and say why it matters.",a:"NPSH_a = (P_tank − P_vap)/ρg + static head − line losses. It must exceed the pump's NPSH_required or you <b>cavitate</b> — vapour bubbles collapse on the impeller, eroding it and killing head."},
+{c:"fld",q:"What is an inducer for?",a:"A low-head axial stage ahead of the main impeller that raises local pressure so the main pump sees adequate NPSH. It is how a turbopump runs on a tank pressurised to a few bar instead of tens."},
+{c:"fld",q:"Joukowsky water hammer — write it and say when it bites.",a:"Δp = ρcΔv, with c the acoustic speed in the fluid. Opening a valve into an evacuated propellant line gives a large Δv very fast. Peak pressures can exceed design burst — hence slow-opening valves and orifices."},
+{c:"fld",q:"What is adiabatic detonation in a propellant line?",a:"Rapid priming compresses trapped gas at the dead end; the temperature spike can ignite hydrazine or its vapour. Mitigated by evacuating lines before priming and controlling valve opening rate."},
+{c:"fld",q:"What does choked flow mean at a nozzle throat?",a:"The throat reaches M = 1 and mass flow becomes independent of downstream pressure — it depends only on throat area, chamber pressure and temperature. This is why ṁ ∝ P_c A_t and why the throat is the metering element."},
+{c:"fld",q:"Critical pressure ratio for combustion gases with γ = 1.2?",a:"P*/P₀ = (2/(γ+1))^(γ/(γ−1)) = 0.909^6 = <span class='num'>0.564</span>. Any chamber-to-ambient ratio beyond this and the throat is choked, which in a rocket is always."},
+{c:"fld",q:"What heat flux does a regeneratively cooled throat see?",a:"Order <span class='num'>50–160 MW/m²</span> at the throat — an order of magnitude above a fusion divertor. Handled by running the fuel through wall channels at high velocity, plus film cooling on the hot wall."},
+{c:"fld",q:"Pressure-fed versus pump-fed: state the trade.",a:"<b>Pressure-fed</b> is simple and reliable but the tanks must hold chamber pressure, so tank mass scales badly with P_c. <b>Pump-fed</b> lets tanks be thin but adds turbomachinery, a gas generator or cycle, and start transients."},
+{c:"fld",q:"What happens to thrust in a blowdown system?",a:"Ullage gas expands as propellant leaves, so tank pressure and thrust decay through the mission. A <span class='num'>4:1</span> blowdown ratio is typical — the last thrust is a quarter of the first, and Isp drops with it."},
+{c:"fld",q:"Is flow in a small satellite propellant line usually laminar or turbulent?",a:"Usually <b>laminar</b> — low velocities in millimetre lines. That means entrance-length effects are a big fraction of the run and the Hagen–Poiseuille estimate is often good enough for sizing."},
+{c:"fld",q:"How is two-phase flow different in microgravity?",a:"No buoyancy, so no stratified or bubbly-to-slug transition driven by gravity. Flow regimes are set by shear and surface tension instead — bubbles do not rise, they go where the flow puts them. Terrestrial correlations do not transfer."},
+{c:"fld",q:"How is a spacecraft leak rate specified and measured?",a:"In <b>scc/s of helium</b>, measured with a mass spectrometer leak detector. Watch the regime: at very low leak rates flow is molecular, not viscous, so helium and propellant rates differ by more than a density ratio."},
+
+{c:"prp",q:"State the rocket equation and what each term physically is.",a:"Δv = I_sp·g₀·ln(m₀/m_f). I_sp·g₀ is <b>effective exhaust velocity</b>, the efficiency of the propellant. The log means mass ratio gives diminishing returns — which is the entire argument for staging."},
+{c:"prp",q:"Δv from Isp 300 s and a mass ratio of 2?",a:"Δv = 300 × 9.807 × ln 2 = 2942 × 0.693 = <span class='num'>2040 m/s</span>. Halving your dry mass buys you one more of these, and only one."},
+{c:"prp",q:"What propellant fraction do you need for 3.86 km/s at Isp 320 s?",a:"MR = exp(3860/(320 × 9.807)) = exp(1.230) = 3.42. So m_f/m₀ = 0.29 — <span class='num'>71% of the initial mass is propellant</span>. That is a LEO-to-GEO chemical transfer in one number."},
+{c:"prp",q:"Write the full thrust equation.",a:"F = ṁv_e + (P_e − P_a)A_e. The second term is why a nozzle optimised for vacuum underperforms at sea level and vice versa, and why altitude-compensating nozzles keep getting proposed."},
+{c:"prp",q:"An ion thruster gives 100 mN at 3000 s Isp. Mass flow and power?",a:"ṁ = F/(I_sp g₀) = 0.1/29,420 = <span class='num'>3.4 mg/s</span>. Jet power = ½Fv_e = <span class='num'>1.47 kW</span>; at 60% total efficiency you need about <span class='num'>2.5 kW</span> from the bus."},
+{c:"prp",q:"State the real trade for electric propulsion.",a:"High Isp cuts propellant mass by a large factor, but thrust is millinewtons so transfers take <b>months</b>, you spend that time accumulating dose in the belts, and you must carry kilowatts of array and radiator to feed it."},
+{c:"prp",q:"Hall thruster versus gridded ion — one line each.",a:"<b>Hall</b>: ~1600 s, higher thrust density, simpler, quasi-neutral plasma acceleration. <b>Gridded ion</b>: 3000 s and up, higher efficiency, lower thrust, grid erosion is the life-limiter."},
+{c:"prp",q:"Isp and the catch for monopropellant hydrazine.",a:"About <span class='num'>230 s</span> through a catalyst bed. The catch is the <b>bed heater</b> — cold starts degrade the catalyst and hurt performance, so you pay standby power continuously, and the freezing point drives line heaters."},
+{c:"prp",q:"Why are hypergolic bipropellants still used despite the toxicity?",a:"MMH/NTO gives about <span class='num'>320 s</span> and ignites on contact — <b>no igniter, no ignition timing risk, restartable indefinitely</b>. For a satellite that must fire reliably after years in storage, that reliability argument still wins."},
+{c:"prp",q:"Vacuum Isp of LOX/LH2 and its penalty.",a:"About <span class='num'>450 s</span>, the best chemical practical. The penalty is hydrogen's density — 71 kg/m³ — so tanks are huge and heavy, plus cryogenic boil-off and insulation mass."},
+{c:"prp",q:"When is cold gas still the right answer?",a:"Nitrogen at about <span class='num'>70 s</span>. Chosen when you need tiny impulse bits, no plume contamination, no combustion, and absolute simplicity — cubesats, precision pointing, docking."},
+{c:"prp",q:"What is nozzle expansion ratio and what caps it?",a:"ε = A_e/A_t. Vacuum engines run ε above 100. At sea level you are capped by <b>flow separation</b> — expand too far, exit pressure drops well below ambient, the flow detaches and side loads can wreck the nozzle."},
+{c:"prp",q:"Roughly when does a nozzle flow separate?",a:"Summerfield's rule of thumb: separation around <b>P_e ≲ 0.35 P_a</b>. It is why first-stage nozzles look stubby and upper-stage nozzles look like bells."},
+{c:"prp",q:"Split Isp into its two independent efficiencies.",a:"I_sp·g₀ = c* × C_F. <b>c*</b> is characteristic velocity — how well the injector and chamber burn. <b>C_F</b> is thrust coefficient — how well the nozzle expands. Test data separates them, which tells you which component to fix."},
+{c:"prp",q:"What goes wrong when you throttle deeply?",a:"Chamber pressure falls, so <b>injector pressure drop falls</b> as roughly the square of flow. Below about 20% of P_c the injector loses authority over the feed system and combustion instability becomes likely. Hence pintle injectors for deep throttling."},
+{c:"prp",q:"Name the three combustion instability regimes.",a:"<b>Chugging</b> — low frequency, coupled to feed system compliance. <b>Buzzing</b> — intermediate. <b>Screech</b> — high frequency acoustic modes of the chamber. Cured with baffles, acoustic cavities and injector ΔP."},
+{c:"prp",q:"Why stage at all, in one sentence?",a:"Because the rocket equation is logarithmic in mass ratio, and dropping dry structure mid-flight resets the denominator — you get a new mass ratio instead of pushing empty tanks to orbital velocity."},
+{c:"prp",q:"Why is Δv to LEO about 9.4 km/s when orbital velocity is 7.7?",a:"The difference is <b>gravity losses and drag losses</b>, roughly 1.5–2 km/s combined, minus the ~0.4 km/s Earth rotation gives you. Steering losses add a little more."},
+{c:"prp",q:"What is a drag sail and what rule drives it?",a:"A deployable membrane that collapses ballistic coefficient to force reentry. Post-mission disposal rules have tightened from the old 25-year guideline to a <span class='num'>5-year</span> FCC requirement for US-licensed LEO satellites."},
+{c:"prp",q:"Why does plume impingement appear in every thruster placement review?",a:"Plumes deposit contaminants on optics and radiators, apply unwanted torques on arrays, and heat structures locally. Canting thrusters costs you cosine efficiency but is often cheaper than the contamination."},
+
+{c:"str",q:"State Miles' equation and use it.",a:"G_rms = √((π/2)·f_n·Q·PSD). With f_n = 100 Hz, Q = 10, PSD = 0.1 g²/Hz: √(1.571 × 100 × 10 × 0.1) = <span class='num'>12.5 g rms</span>. Design to 3σ, so about 37 g."},
+{c:"str",q:"Why is there a first-mode frequency requirement in the launch vehicle interface document?",a:"To keep the payload's fundamental modes <b>away from the launch vehicle's</b> so they do not couple and amplify. Typical requirements are around 35 Hz lateral and 80 Hz axial — stiffness, not strength, drives the primary structure."},
+{c:"str",q:"What is a PSD and how do you get G_rms from one?",a:"Power spectral density in g²/Hz describes random vibration energy versus frequency. <b>G_rms is the square root of the area under the curve</b> — so a decade of low-level broadband can matter as much as a narrow peak."},
+{c:"str",q:"What are quasi-static loads?",a:"A single design envelope combining steady acceleration with low-frequency transients — something like 6 g axial with 3 g lateral applied simultaneously. It sizes the primary structure and the separation ring."},
+{c:"str",q:"Write margin of safety and say what makes it acceptable.",a:"MS = allowable/(FS × limit load) − 1, and it must be <b>≥ 0</b>. Quoting a negative margin anywhere in a review is a stop-work item. Positive but tiny margins invite a test rather than an analysis."},
+{c:"str",q:"Typical factors of safety for a metallic spacecraft structure?",a:"Around <span class='num'>1.25 on yield and 1.4 on ultimate</span> for a design verified by test; higher if analysis-only. Pressure vessels and composite structures carry their own, higher, factors."},
+{c:"str",q:"Why does fastener preload get its own analysis?",a:"Preload prevents joint gapping and slip under vibration. It is lost to <b>embedment, relaxation and CTE mismatch</b> across a temperature range — and nothing in orbit can be re-torqued, so every fastener needs a locking feature."},
+{c:"str",q:"Why must every enclosed volume be vented?",a:"Fairing pressure drops fast during ascent. A sealed box or a blanket with no vent path sees the differential and can burst or delaminate. Vent area is sized against the depressurisation rate in the launch vehicle document."},
+{c:"str",q:"What are TML and CVCM, and what are the limits?",a:"Total mass loss and collected volatile condensable material, per ASTM E595. Standard screening is <b>TML < 1%, CVCM < 0.1%</b>. Outgassed volatiles condense on cold optics and radiators — a thermal and optical problem, not just cleanliness."},
+{c:"str",q:"Why does cold welding happen in vacuum and how do you prevent it?",a:"With no atmosphere there is no oxide layer to re-form, so clean metal contact can adhere. Prevention is <b>dissimilar metals in contact, hard coatings, and dry film lubricants like MoS₂</b> — wet lubricants outgas."},
+
+{c:"pwr",q:"How much power does a square metre of solar array produce in LEO?",a:"1361 × cell efficiency (~30% for triple junction) × cos(incidence) × packing, giving roughly <span class='num'>350–400 W/m² at beginning of life</span>, degrading maybe 15% over five years from radiation and UV."},
+{c:"pwr",q:"How do you size the array when there is eclipse?",a:"The array must carry the load in sunlight <b>and</b> recharge the battery for the eclipse it just did: P_array ≈ P_load(1 + T_ecl/(η_charge·T_sun)). At 36 min eclipse in a 92 min orbit that is a big multiplier."},
+{c:"pwr",q:"Why is allowable depth of discharge so different between LEO and GEO?",a:"LEO sees about <span class='num'>5,700 cycles/year</span>, so lithium-ion DoD is held low — 20–30% — for cycle life. GEO sees roughly 90 eclipses a year, so 70–80% DoD is acceptable. Same chemistry, different limit."},
+{c:"pwr",q:"Why do larger spacecraft move to higher bus voltage?",a:"I²R losses and harness mass. At fixed power, doubling voltage halves current and quarters resistive loss. The counter-pressure is <b>Paschen breakdown and arcing</b> in partial vacuum, which is why 100 V buses need careful design."},
+{c:"pwr",q:"Peak power tracking versus direct energy transfer?",a:"<b>PPT</b> holds the array at its maximum power point — more energy, more converter mass and loss. <b>DET</b> ties the array near the bus voltage — simpler and more efficient at the operating point, but wasteful off-design."},
+{c:"pwr",q:"What power margin should you carry at preliminary design review?",a:"Typically <span class='num'>20–30%</span>, shrinking as the design matures. Margin gets eaten by mass growth, harness losses, and the heater power nobody budgeted for in the cold case."}
+];
+
+const BIG=[
+{c:"thr",t:"Thermal design for a 6U cubesat in 500 km sun-synchronous orbit",
+g:"Bus 20 W average, 45 W peak. Surface 0.34 m² total. Requirement: electronics 0°C to 40°C, battery 5°C to 30°C. β angle range 20° to 75°.",
+s:["Identify hot and cold cases. Hot: high β, full sun, peak power, end-of-life α. Cold: low β, maximum eclipse, minimum power, survival mode with payload off.",
+"Compute absorbed environmental flux for each face — direct solar 1361 W/m², albedo about 0.3 of that on the nadir face, Earth IR 237 W/m² on nadir.",
+"Steady-state balance: total absorbed plus dissipated equals total radiated. Solve T = ((Q_abs + Q_diss)/(εσA_eff))^¼.",
+"Check the hot case against 40°C. If it fails, lower α/ε on sunlit faces (white paint or OSR) or add radiator area.",
+"Check the cold case against 0°C. Size survival heaters for the deficit and add that power to the eclipse energy budget.",
+"Verify the battery separately — it has the tightest band and usually needs its own heater and isolation from the structure."],
+a:"With 20 W into 0.34 m² at ε = 0.85, dissipation alone gives σT⁴ ≈ 20/(0.85 × 0.34) = 69 W/m², so about <strong>172 K</strong> before any environmental input. The environment is doing most of the work, which means <strong>coating selection dominates the design</strong> — and the cold case almost always needs heaters. Expect roughly 3–6 W of survival heat and design the array for it."},
+
+{c:"prp",t:"Chemical versus electric transfer for a 500 kg satellite, LEO to GEO",
+g:"Δv chemical 3.86 km/s (plus 28° plane change if launched from mid-latitude). Bipropellant Isp 320 s. Hall thruster Isp 1600 s, 200 mN, 4 kW. Low-thrust spiral needs roughly 5.9 km/s.",
+s:["Chemical: MR = exp(3860/(320 × 9.807)) = 3.42. Propellant = 500 × (1 − 1/3.42).",
+"Electric: MR = exp(5900/(1600 × 9.807)) = exp(0.376) = 1.46. Propellant = 500 × (1 − 1/1.46).",
+"Compare propellant masses and note what the electric case must carry extra — 4 kW of array, PPU, radiator.",
+"Estimate electric transfer time: a = F/m = 0.2/500 = 4×10⁻⁴ m/s². Time ≈ Δv/a.",
+"Weigh the transfer time against belt dose, revenue delay, and array degradation during the spiral."],
+a:"Chemical needs about <strong>354 kg of propellant</strong> — 71% of the wet mass. Electric needs about <strong>158 kg</strong>, saving roughly 200 kg. But the spiral takes 5900/4×10⁻⁴ ≈ 1.5×10⁷ s, about <strong>170 days</strong>, spent crossing the radiation belts repeatedly. The honest answer names the saving <em>and</em> the delay, then asks what the mission values."},
+
+{c:"orb",t:"Station-keeping and lifetime for a 400 km constellation satellite",
+g:"Mass 260 kg, cross-section 3.2 m² in ram, C_d 2.2, five-year design life. Density 1×10⁻¹² kg/m³ at solar minimum, 4×10⁻¹² at maximum.",
+s:["Compute drag force at both density extremes: F = ½ρv²C_dA at v = 7.67 km/s.",
+"Convert to deceleration and then to Δv per year: Δv = (F/m) × 3.15×10⁷ s.",
+"Take the solar-maximum case as the sizing case and multiply by five years.",
+"Add margin for attitude off-pointing, ballistic coefficient uncertainty and disposal.",
+"Size the propellant: with a monopropellant at 230 s, m_p = m(1 − exp(−Δv/(I_sp g₀)))."],
+a:"At solar maximum F = 0.5 × 4e−12 × 5.88e7 × 2.2 × 3.2 ≈ <strong>0.83 mN</strong>, so a = 3.2×10⁻⁶ m/s² and Δv ≈ <strong>100 m/s per year</strong>. Five years plus disposal and margin lands near <strong>600 m/s</strong>, which at 230 s Isp is roughly <strong>65 kg of hydrazine</strong> — a quarter of the spacecraft. Density uncertainty is the dominant error, so state which solar model you used."},
+
+{c:"thr",t:"Radiator and heat pipe network for a 1.5 kW payload",
+g:"Payload baseplate must stay below 40°C. Radiator ε = 0.85, α = 0.15, mounted anti-sun but sees 30 W/m² of stray albedo. Heat pipes carry heat 1.8 m from payload to radiator.",
+s:["Set radiator temperature below the baseplate by the transport ΔT — assume 10 K across pipes and interfaces to start.",
+"Radiator at 30°C = 303 K. Reject per unit area: εσT⁴ − α × 30 = 0.85 × 5.67e−8 × 8.43e9 − 4.5.",
+"Solve area A = 1500/net flux.",
+"Check the heat pipe capacity against 1500 W over 1.8 m — this is the QL (watt-metre) rating, so 1500 × 1.8 = 2700 W·m.",
+"Verify the capillary limit is not exceeded and confirm ground test orientation will not mask a failure.",
+"Re-check the interface ΔT assumption with real contact conductance; if it is 5 K rather than 10 K you get area back."],
+a:"Net flux = 406 − 4.5 ≈ <strong>401 W/m²</strong>, so A ≈ <strong>3.7 m²</strong>. The heat pipe requirement of 2700 W·m exceeds a single ammonia CCHP, so you need <strong>several pipes in parallel or a loop heat pipe</strong>. Note out loud that the 10 K transport assumption is the softest number in the chain and drives area roughly as T⁴."},
+
+{c:"rad",t:"Radiation budget and shielding trade for a five-year GEO mission",
+g:"Baseline dose behind 100 mil aluminium is about 30 krad(Si)/year at GEO. Candidate part is rated to 50 krad. Spacecraft mass budget is tight.",
+s:["Compute unmitigated mission dose: 30 × 5 = 150 krad against a 50 krad part — a factor of three short before margin.",
+"Apply the standard radiation design margin of 2 on dose, so the requirement is really 300 krad or a shielded environment below 25 krad.",
+"Read the dose-depth curve: doubling aluminium thickness does not halve dose, and beyond a few hundred mil the returns collapse because of bremsstrahlung and GCR.",
+"Consider spot shielding the part rather than the box, and graded-Z if the environment is electron-dominated.",
+"If shielding cannot close it, change the part — rad-hard equivalent, or accept a redundant non-hard part with scrubbing.",
+"Separately verify SEE: latchup immunity and upset rate, which shielding barely helps."],
+a:"Shielding alone will not close a 3× gap economically — <strong>dose falls roughly logarithmically with thickness</strong> while mass rises linearly. The defensible answer is spot shielding plus part substitution, and stating clearly that <strong>SEE is a separate problem shielding does not solve</strong>. That last point is what separates a real answer from a textbook one."},
+
+{c:"fld",t:"Hydrazine tank, blowdown and capillary retention",
+g:"Need 65 kg of hydrazine, ρ = 1004 kg/m³. Blowdown 4:1, start pressure 22 bar. Tank is a 0.5 m sphere with a vane PMD. Vehicle acceleration during coast ~10⁻⁵ g.",
+s:["Propellant volume = 65/1004 = 0.065 m³. Sphere volume at 0.5 m diameter = 0.065 m³ — check the fit and add ullage.",
+"For 4:1 blowdown the initial ullage must be a third of the propellant volume, so total tank volume ≈ 1.33 × liquid volume. Re-size the sphere.",
+"Compute end-of-life pressure: 22/4 = 5.5 bar, and check the thruster still meets minimum inlet pressure there.",
+"Check the Bond number: Bo = ρaL²/σ with a = 10⁻⁴ m/s², L = 0.25 m, σ ≈ 0.067 N/m.",
+"If Bo ≪ 1, surface tension governs and the vane PMD can retain liquid over the outlet — confirm the vane gap against the retention criterion.",
+"Check slosh frequency at that acceleration and confirm it is far below the attitude control bandwidth."],
+a:"Bo = 1004 × 1e−4 × 0.0625/0.067 ≈ <strong>0.09</strong> — well below 1, so <strong>surface tension dominates and the PMD is doing real work</strong>. Also flag that thrust falls with the blowdown, so total impulse must be integrated across the decaying pressure, not computed at the initial value. That integration error is a common way to under-size a tank."},
+
+{c:"str",t:"Sizing a bracket for a 4 kg component under random vibration",
+g:"Component 4 kg on an aluminium bracket. Qualification PSD 0.1 g²/Hz flat from 50 to 500 Hz. Required first mode above 120 Hz. Q assumed 10. Aluminium yield 270 MPa.",
+s:["Estimate the bracket stiffness needed: f_n = (1/2π)√(k/m) ≥ 120 Hz gives k ≥ m(2πf)² = 4 × (754)² ≈ 2.27 MN/m.",
+"Apply Miles: G_rms = √((π/2) × 120 × 10 × 0.1) = √188 = 13.7 g rms.",
+"Design to 3σ: 41 g. Load = 4 kg × 41 × 9.807 ≈ 1610 N.",
+"Compute bending stress at the bracket root from that load and the moment arm.",
+"Apply factors of safety — 1.25 yield, 1.4 ultimate — and compute margin of safety.",
+"Check fastener preload against the same 3σ load so the joint never gaps, and check the bracket does not push the component's own internal modes down."],
+a:"The design load is about <strong>1.6 kN from a 4 kg part</strong> — that factor of forty is the thing people fail to internalise about random vibration. Note also that raising stiffness to hit 120 Hz <em>increases</em> G_rms in Miles' equation, so chasing frequency and chasing load work against each other. Naming that tension is the point of the problem."},
+
+{c:"prp",t:"Regeneratively cooled thrust chamber sizing",
+g:"Chamber pressure 60 bar, throat heat flux 80 MW/m², throat diameter 60 mm, coolant is fuel at 8 kg/s entering at 300 K. Copper alloy wall, limit 800 K hot side. Wall thickness 0.8 mm, k = 350 W/m·K.",
+s:["Estimate throat heat load: area of the high-flux band, roughly πDL with L ≈ 30 mm, gives about 0.0057 m² × 80 MW/m².",
+"Compute ΔT across the wall: ΔT = q″t/k = 8×10⁷ × 8×10⁻⁴/350.",
+"Subtract from the 800 K limit to get the required coolant-side wall temperature.",
+"Compute the coolant-side film coefficient needed: h = q″/(T_wall,c − T_bulk).",
+"Size channel velocity from that h using a Dittus–Boelter or Sieder–Tate form, and check the resulting pressure drop against pump capability.",
+"Verify the coolant does not reach its critical or coking temperature anywhere along the passage."],
+a:"ΔT across the wall = <strong>183 K</strong>, so the coolant-side wall sits near 617 K. Required h = 8×10⁷/(617 − 300) ≈ <strong>250 kW/m²K</strong> — enormous, which is why regen channels run at high velocity in narrow passages and why the pressure drop, not the heat transfer, is usually what limits the design. Say that trade out loud."},
+
+{c:"pwr",t:"Coupled power and thermal sizing across the eclipse cycle",
+g:"LEO 400 km, 92.4 min orbit with 36 min eclipse. Load 320 W continuous. Battery round-trip efficiency 90%, allowable DoD 25%. Array 30% efficient, 15% EOL degradation.",
+s:["Energy per eclipse: 320 W × 36 min = 192 Wh... check units: 320 × 0.6 h = 192 Wh.",
+"Battery capacity from DoD: 192/0.25 = 768 Wh nameplate, before margin.",
+"Array must carry load plus recharge during 56.4 min of sun: P = 320 + 192/(0.9 × 0.94 h) = 320 + 227.",
+"Convert to area: 547 W at ~350 W/m² BOL, then divide by 0.85 for EOL degradation.",
+"Feed the array and battery losses into the thermal model — inefficiency is dissipation, and the battery has the tightest temperature band on the vehicle.",
+"Check the cold case: in eclipse the array produces nothing but heaters draw power, so the eclipse load is not actually 320 W."],
+a:"Battery <strong>≈ 770 Wh</strong>, array <strong>≈ 550 W</strong> which is about <strong>1.8 m² at end of life</strong>. The trap in this problem is step six — <strong>heater power in eclipse is a load nobody budgets</strong>, and it appears exactly when the array is producing zero. Raise it unprompted and you have shown you have actually closed a power budget."},
+
+{c:"thr",t:"Anomaly walkthrough: the spacecraft is running hot",
+g:"Six months into a two-year LEO mission, payload baseplate is trending 8 K above prediction and rising slowly. No change in duty cycle. Telemetry otherwise nominal.",
+s:["Separate step change from trend. A slow monotonic rise points at degradation; a step points at a configuration or hardware event.",
+"Check the obvious external drivers first: β angle history, season, solar constant variation, orbit altitude drift.",
+"Check dissipation: is the payload actually drawing what you think? Compare bus current against the thermal model input.",
+"Consider coating degradation — UV and contamination raise α over time while ε stays flat. This produces exactly a slow monotonic rise.",
+"Consider contamination on the radiator specifically — outgassed volatiles condensing on the coldest surface.",
+"Consider a partial heat pipe failure or a degraded interface, which would show as a larger ΔT between payload and radiator rather than a uniform rise.",
+"Use the ΔT between sensors, not absolute temperatures, to localise: a transport problem moves the gradient, an optical property problem moves everything together."],
+a:"The discriminator is <strong>where the temperature difference changed</strong>. If payload-to-radiator ΔT is constant and both rose, it is an <strong>optical property problem</strong> — degraded α on the radiator, consistent with UV and contamination and consistent with a slow monotonic trend. If the ΔT itself grew, the transport path degraded. Saying that <em>before</em> guessing a cause is the whole answer."}
+];
+
+let active=new Set(Object.keys(CATS));
+const pad=n=>String(n).padStart(2,"0");
+const ids={};
+Q.forEach(p=>{ids[p.c]=(ids[p.c]||0)+1;p.id=p.c.toUpperCase()+"-"+pad(ids[p.c]);});
+
+const board=document.getElementById("board");
+board.innerHTML=Object.entries(CATS).map(([k,v])=>
+ `<div class="cell"><div class="k">${v.n}</div><div class="v" style="color:${v.c}">${Q.filter(p=>p.c===k).length}</div></div>`
+).join("")+`<div class="cell"><div class="k">Long form</div><div class="v">${BIG.length}</div></div>`;
+
+const chips=document.getElementById("chips");
+chips.innerHTML=Object.entries(CATS).map(([k,v])=>
+ `<button class="chip" data-k="${k}" aria-pressed="true" style="--c:${v.c}">${v.n}</button>`
+).join("")+`<span class="spacer"></span><button class="txtbtn" id="all">Show all</button><button class="txtbtn" id="none">Hide all</button>`;
+
+const grid=document.getElementById("grid");
+function render(){
+ grid.innerHTML=Q.filter(p=>active.has(p.c)).map((p,i)=>
+  `<article class="card" style="--c:${CATS[p.c].c}" data-i="${Q.indexOf(p)}">
+     <div class="hd"><span class="pid">${p.id}</span><span class="ptag">${CATS[p.c].n}</span></div>
+     <button class="qbtn">${p.q}</button>
+     <div class="ans">${p.a}</div>
+   </article>`).join("");
+}
+render();
+
+document.getElementById("bigs").innerHTML=BIG.map((b,i)=>
+ `<section class="big" style="--c:${CATS[b.c].c}">
+    <div class="bh"><span class="pid">LONG-${pad(i+1)}</span><h3>${b.t}</h3></div>
+    <div class="given">${b.g}</div>
+    <button class="bigbtn">Show the working →</button>
+    <div class="work"><ol>${b.s.map(x=>`<li>${x}</li>`).join("")}</ol><div class="res">${b.a}</div></div>
+  </section>`).join("");
+
+document.addEventListener("click",e=>{
+ const q=e.target.closest(".qbtn");
+ if(q){q.closest(".card").classList.toggle("open");return;}
+ const bb=e.target.closest(".bigbtn");
+ if(bb){const s=bb.closest(".big");s.classList.toggle("open");
+   bb.textContent=s.classList.contains("open")?"Hide the working":"Show the working →";return;}
+ const c=e.target.closest(".chip");
+ if(c){const k=c.dataset.k;
+   if(active.has(k))active.delete(k);else active.add(k);
+   if(!active.size){active=new Set(Object.keys(CATS));}
+   Object.keys(CATS).forEach(kk=>{
+     const el=chips.querySelector(`[data-k="${kk}"]`);
+     el.setAttribute("aria-pressed",active.has(kk));
+   });
+   render();return;}
+ if(e.target.id==="all"){document.querySelectorAll(".card").forEach(x=>x.classList.add("open"));return;}
+ if(e.target.id==="none"){document.querySelectorAll(".card").forEach(x=>x.classList.remove("open"));return;}
+});
+</script>

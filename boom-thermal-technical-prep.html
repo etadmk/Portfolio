@@ -1,0 +1,331 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Deployable boom thermal — technical prep</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0A0E18;--panel:#111A28;--panel2:#0E1522;--line:#1E2C40;--line2:#2B3E5C;
+--ink:#E6ECF5;--mute:#8394AC;--dim:#5A6C86;
+--sun:#F5C542;--cold:#6E9BF7;--warm:#F5843B;--go:#4FC9A5;--warn:#EE6BA6;--str:#B189F2}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font-family:"IBM Plex Sans",system-ui,sans-serif;font-size:15px;line-height:1.62;padding:0 0 80px;background-image:linear-gradient(180deg,#0F1728 0%,#0A0E18 460px)}
+.wrap{max-width:1080px;margin:0 auto;padding:0 22px}
+header.top{padding:44px 0 24px;border-bottom:1px solid var(--line)}
+.eyebrow{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--dim)}
+h1{font-family:"Barlow Condensed",sans-serif;font-weight:600;font-size:clamp(36px,6.5vw,60px);line-height:.98;text-transform:uppercase;margin:10px 0 12px}
+h1 em{font-style:normal;color:var(--sun)}
+.lede{color:var(--mute);max-width:64ch}
+.board{display:grid;grid-template-columns:repeat(auto-fit,minmax(118px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);margin:24px 0 0}
+.cell{background:var(--panel2);padding:11px 13px}
+.cell .k{font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--dim)}
+.cell .v{font-family:"Barlow Condensed",sans-serif;font-size:26px;font-weight:500;line-height:1.12;margin-top:2px}
+h2{font-family:"Barlow Condensed",sans-serif;font-weight:600;font-size:32px;text-transform:uppercase;letter-spacing:.04em;margin:0 0 4px}
+.sechead{border-top:1px solid var(--line);padding-top:26px;margin-top:52px}
+.secnote{color:var(--dim);font-size:13.5px;margin-bottom:22px;max-width:72ch}
+h3{font-family:"Barlow Condensed",sans-serif;font-weight:600;font-size:21px;text-transform:uppercase;letter-spacing:.03em;margin:26px 0 8px}
+p{margin-bottom:13px;max-width:74ch}
+.fig{background:var(--panel);border:1px solid var(--line);padding:18px 18px 12px;margin:18px 0 22px}
+.fig figcaption{font-family:"IBM Plex Mono",monospace;font-size:11.5px;color:var(--dim);margin-top:10px}
+svg{display:block;width:100%;height:auto}
+.tl{font-family:"IBM Plex Mono",monospace;font-size:11px;fill:var(--mute)}
+.tb{font-family:"IBM Plex Sans",sans-serif;font-size:12.5px;font-weight:500;fill:var(--ink)}
+.tn{font-family:"IBM Plex Mono",monospace;font-size:11px;fill:var(--dim)}
+.eqbox{background:var(--panel2);border-left:2px solid var(--sun);padding:12px 15px;font-family:"IBM Plex Mono",monospace;font-size:13px;color:#C7D4E6;margin:14px 0;white-space:pre-wrap;overflow-x:auto}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:13px}
+.card{background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--c,var(--sun))}
+.card .hd{display:flex;gap:9px;padding:11px 14px 0;align-items:center}
+.pid{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.1em;color:var(--c,var(--sun))}
+.ptag{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--dim)}
+button{font:inherit;cursor:pointer;border:none;background:none;color:inherit;text-align:left}
+.qbtn{padding:7px 14px 13px;width:100%;font-size:14.5px;line-height:1.5}
+.qbtn::after{content:"tap to answer";display:block;font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--dim);margin-top:9px}
+.card.open .qbtn::after{content:"hide"}
+.ans{display:none;padding:13px 14px 15px;border-top:1px dashed var(--line2);background:var(--panel2);font-size:14px;color:#C7D4E6}
+.card.open .ans{display:block}
+.ans b{color:var(--c,var(--sun));font-weight:500}
+.ans .n{font-family:"IBM Plex Mono",monospace;color:#fff}
+ul{margin:0 0 14px 20px;max-width:74ch}li{margin-bottom:7px}
+table{border-collapse:collapse;width:100%;margin:14px 0;font-size:13.5px}
+th,td{text-align:left;padding:8px 11px;border-bottom:1px solid var(--line)}
+th{font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--dim);font-weight:400}
+td.m{font-family:"IBM Plex Mono",monospace;color:#fff}
+.callout{background:var(--panel);border:1px solid var(--line);border-top:3px solid var(--go);padding:15px 17px;margin:20px 0}
+.callout .lbl{font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--go);margin-bottom:6px}
+footer{margin-top:56px;border-top:1px solid var(--line);padding-top:18px;color:var(--dim);font-size:12.5px}
+@media (max-width:600px){.grid{grid-template-columns:1fr}h1{font-size:34px}}
+</style>
+
+<div class="wrap">
+<header class="top">
+<div class="eyebrow">Reflect Orbital &middot; thermal round 2</div>
+<h1>The boom that<br><em>bends itself</em></h1>
+<p class="lede">They asked about a cylindrical boom with one side in sunlight and the other facing deep space, four or five of them, under thermal cycling &mdash; plus heat pipes and some structures. That is one coherent problem with a well-known answer, and the heat pipe and materials sections below are written to be reused across every space interview you have.</p>
+<div class="board">
+<div class="cell"><div class="k">Boom &Delta;T, bare</div><div class="v" style="color:var(--warn)">~190 K</div></div>
+<div class="cell"><div class="k">With cond. wrap</div><div class="v" style="color:var(--go)">~70 K</div></div>
+<div class="cell"><div class="k">Tip bow, alu</div><div class="v">800 mm</div></div>
+<div class="cell"><div class="k">Tip bow, CFRP</div><div class="v">190 mm</div></div>
+<div class="cell"><div class="k">Tip bow, zero-CTE</div><div class="v" style="color:var(--go)">10 mm</div></div>
+<div class="cell"><div class="k">Thermal &tau;</div><div class="v">~140 s</div></div>
+</div>
+</header>
+
+<div class="sechead">
+<h2>01 &middot; Why the boom gets hot on one side</h2>
+<p class="secnote">A tube in sunlight is a two-node radiation problem with a weak conduction link around the circumference.</p>
+</div>
+
+<figure class="fig">
+<svg viewBox="0 0 700 300" role="img" aria-label="Cross section of a cylindrical boom with the sunlit side hot and the shaded side radiating to deep space, linked by weak conduction around the wall">
+<line x1="40" y1="80" x2="150" y2="110" stroke="#F5C542" stroke-width="1.8"/>
+<line x1="40" y1="120" x2="150" y2="135" stroke="#F5C542" stroke-width="1.8"/>
+<line x1="40" y1="160" x2="150" y2="160" stroke="#F5C542" stroke-width="1.8"/>
+<line x1="40" y1="200" x2="150" y2="185" stroke="#F5C542" stroke-width="1.8"/>
+<text class="tn" x="42" y="66" fill="#F5C542">solar 1361 W/m&sup2;</text>
+<path d="M240 60 A 90 90 0 0 0 240 240" fill="none" stroke="#F5843B" stroke-width="9"/>
+<path d="M240 60 A 90 90 0 0 1 240 240" fill="none" stroke="#6E9BF7" stroke-width="9"/>
+<text class="tb" x="196" y="156" text-anchor="end" fill="#F5843B">352 K</text>
+<text class="tb" x="360" y="156" fill="#6E9BF7">160 K</text>
+<path d="M252 66 A 84 84 0 0 1 316 122" fill="none" stroke="#8394AC" stroke-width="1.4" stroke-dasharray="4 3"/>
+<text class="tn" x="300" y="60">weak conduction around the wall</text>
+<line x1="420" y1="110" x2="530" y2="86" stroke="#6E9BF7" stroke-width="1.8"/>
+<line x1="420" y1="150" x2="530" y2="150" stroke="#6E9BF7" stroke-width="1.8"/>
+<line x1="420" y1="190" x2="530" y2="214" stroke="#6E9BF7" stroke-width="1.8"/>
+<text class="tn" x="544" y="154" fill="#6E9BF7">radiating to 2.7 K</text>
+<text class="tn" x="350" y="284" text-anchor="middle">100 mm CFRP tube, 0.5 mm wall, transverse k &asymp; 2 W/mK &mdash; illustrative two-node balance</text>
+</svg>
+<figcaption>Fig 1 &mdash; The sunlit half runs near 80 &deg;C while the shaded half sits near &minus;110 &deg;C. That gradient is the whole problem.</figcaption>
+</figure>
+
+<div class="eqbox">hot half absorbs   &alpha;S &times; 2R      per unit length
+each half radiates &epsilon;&sigma;T&#8308; &times; &pi;R
+circumferential    4 k t &Delta;T / (&pi;R)
+
+bare CFRP, k_transverse &asymp; 2 W/mK   &rarr;  &Delta;T &asymp; 190 K
+with a thin high-k wrap or liner      &rarr;  &Delta;T &asymp;  70 K</div>
+
+<p>The counterintuitive bit worth saying out loud: <strong>carbon composite is the good material here despite conducting badly.</strong> Its transverse conductivity is poor, so it holds a bigger gradient than aluminium would. It wins anyway, and the next section is why.</p>
+
+<div class="sechead">
+<h2>02 &middot; The gradient bends the boom</h2>
+<p class="secnote">This is the number they want. Two lines of geometry.</p>
+</div>
+
+<div class="eqbox">curvature      &kappa; = &alpha;_CTE &middot; &Delta;T / D          D = tube diameter
+tip deflection &delta; = &kappa;L&sup2;/2               cantilever, uniform curvature
+
+10 m boom, 100 mm diameter:</div>
+
+<figure class="fig">
+<svg viewBox="0 0 700 250" role="img" aria-label="Bar comparison of boom tip deflection for aluminium, standard carbon composite, and a tailored near-zero CTE layup">
+<text class="tl" x="228" y="58" text-anchor="end">aluminium, &alpha; 23 ppm/K</text>
+<rect x="240" y="42" width="380" height="22" rx="3" fill="#EE6BA6"/>
+<text class="tn" x="630" y="58">800 mm</text>
+<text class="tl" x="228" y="106" text-anchor="end">standard CFRP, &alpha; 2 ppm/K</text>
+<rect x="240" y="90" width="90" height="22" rx="3" fill="#F5843B"/>
+<text class="tn" x="340" y="106">190 mm</text>
+<text class="tl" x="228" y="154" text-anchor="end">tailored layup, &alpha; 0.1 ppm/K</text>
+<rect x="240" y="138" width="5" height="22" rx="2" fill="#4FC9A5"/>
+<text class="tn" x="255" y="154">10 mm</text>
+<text class="tl" x="228" y="202" text-anchor="end">tailored + conductive wrap</text>
+<rect x="240" y="186" width="2" height="22" rx="1" fill="#4FC9A5"/>
+<text class="tn" x="252" y="202">3.5 mm</text>
+<text class="tn" x="350" y="238" text-anchor="middle">Same tube, same sunlight. The only variables are CTE and circumferential conduction.</text>
+</svg>
+<figcaption>Fig 2 &mdash; Tip deflection scales linearly with CTE and with &Delta;T. Attack both.</figcaption>
+</figure>
+
+<p><strong>That is the answer to "why composite booms."</strong> Not stiffness-to-weight &mdash; near-zero CTE. An aluminium boom bows almost a metre at the tip; a tailored layup bows a centimetre. Then you add a thin aluminium liner or a pitch-fibre wrap purely to short the circumference thermally, and you get another factor of three.</p>
+
+<div class="sechead">
+<h2>03 &middot; Thermal cycling &mdash; snap and flutter</h2>
+<p class="secnote">The second half of their question. Know the dimensionless group and know which regime you are in.</p>
+</div>
+
+<div class="eqbox">thermal time constant  &tau;_T = &rho;ct / (4&epsilon;&sigma;T&sup3;)
+  CFRP, 0.5 mm, 300 K:  720 / 5.2  &asymp; 140 s
+
+structural period      T_s = 1/f&#8321;
+  10 m cantilever tube, f&#8321; &asymp; 1.3 Hz  &rarr;  0.8 s
+
+Boley number  B = &tau;_T / T_s  &asymp;  180</div>
+
+<figure class="fig">
+<svg viewBox="0 0 700 230" role="img" aria-label="Regime line showing thermal flutter risk when the Boley number is near one and quasi-static behaviour when it is large">
+<line x1="70" y1="120" x2="650" y2="120" stroke="#2B3E5C" stroke-width="1.5"/>
+<line x1="140" y1="112" x2="140" y2="128" stroke="#5A6C86"/><text class="tl" x="140" y="146" text-anchor="middle">0.1</text>
+<line x1="290" y1="112" x2="290" y2="128" stroke="#5A6C86"/><text class="tl" x="290" y="146" text-anchor="middle">1</text>
+<line x1="440" y1="112" x2="440" y2="128" stroke="#5A6C86"/><text class="tl" x="440" y="146" text-anchor="middle">10</text>
+<line x1="590" y1="112" x2="590" y2="128" stroke="#5A6C86"/><text class="tl" x="590" y="146" text-anchor="middle">100+</text>
+<text class="tn" x="360" y="172" text-anchor="middle">Boley number B = thermal time constant / structural period</text>
+<rect x="240" y="92" width="100" height="8" rx="4" fill="#EE6BA6"/>
+<text class="tn" x="290" y="82" text-anchor="middle" fill="#EE6BA6">flutter risk</text>
+<rect x="470" y="92" width="170" height="8" rx="4" fill="#4FC9A5"/>
+<text class="tn" x="555" y="82" text-anchor="middle" fill="#4FC9A5">quasi-static bowing</text>
+<line x1="608" y1="56" x2="608" y2="112" stroke="#F5C542" stroke-width="2"/>
+<circle cx="608" cy="56" r="4.5" fill="#F5C542"/>
+<text class="tn" x="600" y="46" text-anchor="end" fill="#F5C542">this boom, B &asymp; 180</text>
+<text class="tn" x="360" y="206" text-anchor="middle">Add the membrane and f&#8321; drops hard &mdash; the loaded structure moves left on this line</text>
+</svg>
+<figcaption>Fig 3 &mdash; Thermal flutter is a resonance between heating and bending. It needs the two timescales to be comparable.</figcaption>
+</figure>
+
+<p>For the bare boom, thermal response is two minutes and the structure rings in under a second, so heating cannot pump the mode &mdash; you get slow bowing, not flutter. <strong>Say the caveat unprompted:</strong> hang a large membrane off four booms and the system's fundamental frequency collapses toward a fraction of a hertz, which moves you left on that line. The vehicle-level number is the one that matters, not the boom's.</p>
+
+<p>Separately from flutter there is <strong>thermal snap</strong> &mdash; the transient at eclipse entry and exit. The shadow edge sweeps past in seconds, the boom's curvature changes over a couple of minutes, and any sudden release of stored strain (a joint slipping, a wrinkle popping) shows up as an impulse. It is the mechanism behind the Hubble solar array jitter, and it is a good thing to name by that history.</p>
+
+<div class="sechead">
+<h2>04 &middot; Four booms make it asymmetric</h2>
+<p class="secnote">The observation that will separate you from a candidate who only answered the single-boom question.</p>
+</div>
+
+<figure class="fig">
+<svg viewBox="0 0 700 270" role="img" aria-label="Four booms at ninety degrees see different sun incidence, so each bows by a different amount and the membrane is loaded asymmetrically">
+<line x1="30" y1="40" x2="120" y2="80" stroke="#F5C542" stroke-width="1.6"/>
+<line x1="30" y1="70" x2="120" y2="102" stroke="#F5C542" stroke-width="1.6"/>
+<text class="tn" x="32" y="30" fill="#F5C542">sun</text>
+<circle cx="360" cy="140" r="10" fill="#8394AC"/>
+<path d="M360 140 Q 250 118 176 96" fill="none" stroke="#F5843B" stroke-width="4"/>
+<path d="M360 140 Q 470 108 552 92" fill="none" stroke="#6E9BF7" stroke-width="4"/>
+<path d="M360 140 Q 400 220 424 244" fill="none" stroke="#B189F2" stroke-width="4"/>
+<path d="M360 140 Q 300 62 274 34" fill="none" stroke="#4FC9A5" stroke-width="4"/>
+<text class="tn" x="150" y="90" text-anchor="end" fill="#F5843B">full sun, max bow</text>
+<text class="tn" x="566" y="90" fill="#6E9BF7">shadowed, cold</text>
+<text class="tn" x="436" y="256" fill="#B189F2">grazing</text>
+<text class="tn" x="266" y="28" text-anchor="end" fill="#4FC9A5">grazing</text>
+<text class="tn" x="350" y="196" text-anchor="middle">Each boom sees a different incidence angle at every instant</text>
+<text class="tn" x="350" y="216" text-anchor="middle">&rarr; unequal bow &rarr; asymmetric membrane tension &rarr; figure error and CP shift</text>
+</svg>
+<figcaption>Fig 4 &mdash; And the pattern rotates continuously as the spacecraft slews to track a ground target.</figcaption>
+</figure>
+
+<p>Three consequences to name:</p>
+<ul>
+<li><strong>The structure is statically indeterminate.</strong> Thermal strain in one boom is reacted by the other three through the membrane, so you cannot analyse a boom alone &mdash; you need the assembly.</li>
+<li><strong>Figure error becomes time-varying.</strong> As the vehicle slews during a service pass, the sun angle on each boom changes, so the membrane shape drifts <em>while you are trying to point</em>.</li>
+<li><strong>Centre of pressure moves.</strong> An asymmetrically bowed reflector shifts CP relative to CM, which turns solar radiation pressure into a growing disturbance torque. Thermal distortion feeds the attitude control problem.</li>
+</ul>
+
+<div class="sechead">
+<h2>05 &middot; The mitigation menu</h2>
+<p class="secnote">If asked "what would you do about it," go down this list in order of cost.</p>
+</div>
+
+<table>
+<tr><th>Fix</th><th>How it works</th><th>Cost</th></tr>
+<tr><td class="m">Tailored CTE layup</td><td>Attacks &kappa; directly &mdash; the single biggest lever, factor of 20 over aluminium.</td><td>Layup complexity, tooling, qualification</td></tr>
+<tr><td class="m">Conductive circumferential path</td><td>Thin aluminium liner or pitch-fibre wrap shorts the gradient. Roughly 3&times; on &Delta;T.</td><td>Mass, bond integrity over cycles</td></tr>
+<tr><td class="m">Coatings for &alpha;/&epsilon;</td><td>Lowers absolute temperature and shifts the gradient. Bare CFRP is nearly black.</td><td>Coating durability under UV and AO</td></tr>
+<tr><td class="m">Open or slotted section</td><td>Lets sunlight reach the far wall so both sides see similar flux. Big &Delta;T reduction.</td><td>Torsional stiffness of open sections is poor</td></tr>
+<tr><td class="m">Lattice instead of tube</td><td>Thin members equilibrate individually; far less shadowed mass.</td><td>Complexity, deployment, joint count</td></tr>
+<tr><td class="m">Live with it, calibrate it</td><td>Model the bow versus sun angle and correct in pointing.</td><td>Needs on-orbit characterisation you may not get</td></tr>
+</table>
+
+<div class="callout">
+<div class="lbl">The answer that shows judgment</div>
+Do not reach for a heat pipe. The gradient you are fixing spans 100 mm of circumference &mdash; a few grams of graphite wrap or a thin aluminium liner solves it passively with no fluid, no charge, no leak path and no ground-test orientation constraint. Heat pipes earn their mass moving watts over metres, not kelvins across a tube. Saying "this is a conduction problem, not a two-phase problem" is a better answer than any heat pipe design.
+</div>
+
+<div class="sechead">
+<h2>06 &middot; Heat pipes &mdash; reusable reference</h2>
+<p class="secnote">This section is the same for Reflect, Cowboy Space and anyone else. Learn it once.</p>
+</div>
+
+<div class="eqbox">&Delta;p_capillary  &ge;  &Delta;p_liquid + &Delta;p_vapour + &Delta;p_gravity
+&Delta;p_cap,max = 2&sigma;cos&theta; / r_c
+
+five limits:  capillary &middot; boiling &middot; entrainment &middot; sonic &middot; viscous
+capacity quoted as QL in watt-metres &mdash; heat &times; transport distance</div>
+
+<table>
+<tr><th>Consideration</th><th>What to say</th></tr>
+<tr><td class="m">Working fluid</td><td>Ammonia for 200&ndash;400 K, propylene colder, methanol lower performance. Figure of merit M = &rho;&sigma;h_fg/&mu;. Water has the best merit number and is unusable because it freezes at 273 K.</td></tr>
+<tr><td class="m">Freezing</td><td>Ammonia freezes at 195 K. A pipe with a cold condenser can freeze, and <strong>frozen startup</strong> is a genuine failure mode &mdash; vapour flows to a blocked condenser and the evaporator dries out. Heaters or a warm parking orientation.</td></tr>
+<tr><td class="m">Ground test</td><td>Grooved pipes are sensitive to fractions of a degree of tilt. Test level, or with the evaporator high, or reflux flatters the result and you fly an unverified article.</td></tr>
+<tr><td class="m">Crossing a hinge</td><td>A rigid CCHP cannot cross a deployment joint. That is where a loop heat pipe earns its complexity &mdash; smooth flexible transport tubing with the wick confined to the evaporator.</td></tr>
+<tr><td class="m">NCG</td><td>Non-condensable gas migrates to the coldest end and blocks condenser area. Deliberately exploited in a variable conductance heat pipe with a gas reservoir for passive temperature control.</td></tr>
+<tr><td class="m">Boiling limit</td><td>Nucleation inside the wick rather than at the meniscus blocks the liquid return path. Distinct from capillary dryout and worse in microgravity where bubbles do not float clear.</td></tr>
+<tr><td class="m">Alternatives</td><td>Pyrolytic graphite sheet reaches roughly 1000&ndash;1900 W/mK in-plane at low density and is flexible. For short paths it beats a heat pipe on mass and has no fluid. Always price this option first.</td></tr>
+</table>
+
+<div class="sechead">
+<h2>07 &middot; Materials and structures &mdash; reusable reference</h2>
+</div>
+
+<table>
+<tr><th>Topic</th><th>What to say</th></tr>
+<tr><td class="m">Local shell buckling</td><td>&sigma;_cr &asymp; 0.6 E t/R for a perfect cylinder, but imperfection knockdown factors of 0.2&ndash;0.5 are standard. Thin tubes fail locally before they fail globally.</td></tr>
+<tr><td class="m">Bow reduces capacity</td><td>A thermally bowed boom carries its axial load eccentrically, so the P&ndash;&delta; effect eats buckling margin. Thermal and structural cases are coupled, not sequential.</td></tr>
+<tr><td class="m">Open sections</td><td>STEM and TRAC booms roll flat for stowage but have very poor torsional stiffness, because an open thin-walled section has almost no St Venant J.</td></tr>
+<tr><td class="m">Stowage creep</td><td>A boom rolled for months takes a viscoelastic set and deploys to the wrong shape. Drives material choice, stow duration and sometimes a thermal reset after deployment.</td></tr>
+<tr><td class="m">Moisture</td><td>Composites absorb water on the ground and release it in vacuum. The resulting dimensional change can rival the thermal strain. Bake out before launch and account for the shift.</td></tr>
+<tr><td class="m">Microcracking</td><td>Thermal cycling cracks the matrix, which changes both CTE and stiffness over life. A qualification campaign has to cycle, not just cold-soak.</td></tr>
+<tr><td class="m">Fastened joints</td><td>Preload prevents gapping and slip; it is lost to embedment, relaxation and CTE mismatch. Nothing is retorqued on orbit, so every fastener needs a locking feature. NASA-STD-5020 is the reference.</td></tr>
+</table>
+
+<div class="sechead">
+<h2>08 &middot; Likely questions</h2>
+</div>
+<div class="grid" id="grid"></div>
+
+<div class="sechead">
+<h2>09 &middot; Ask them</h2>
+</div>
+<ul>
+<li>"Is the boom &Delta;T set by analysis or have you measured it on an article in a chamber?"</li>
+<li>"Does the pointing budget carry thermal bow as a static term versus sun angle, or is it calibrated on orbit?"</li>
+<li>"What is the vehicle first mode with the membrane on, not just the boom?"</li>
+<li>"How do you thermal-cycle an 18 m deployed article &mdash; sub-scale, or a coupon programme plus analysis?"</li>
+<li>"Is stowage creep a driver on how long the article can sit rolled before launch?"</li>
+<li>"Who owns the thermal model today, and where does it most need correlating against test?"</li>
+</ul>
+
+<div class="sechead">
+<h2>10 &middot; Cheat card</h2>
+</div>
+<div class="eqbox">&Delta;T across a bare CFRP tube in sun: order 150&ndash;200 K. Conductive wrap &rarr; ~70 K.
+&kappa; = &alpha;&Delta;T/D      &delta;_tip = &kappa;L&sup2;/2
+  alu 800 mm &middot; CFRP 190 mm &middot; zero-CTE 10 mm &middot; +wrap 3.5 mm
+&tau;_T = &rho;ct/(4&epsilon;&sigma;T&sup3;) &asymp; 140 s      Boley B = &tau;_T/T_struct &asymp; 180 &rarr; quasi-static
+  but the membrane-loaded vehicle sits much closer to B ~ 1
+Four booms &rarr; unequal incidence &rarr; asymmetric bow &rarr; figure error + CP shift,
+  and it rotates during a slew.
+Fix order: tailored CTE &rarr; conductive path &rarr; coatings &rarr; open section.
+Do NOT put a heat pipe in a boom. It is a conduction problem.
+Ammonia freezes 195 K &middot; frozen startup is real &middot; test level &middot; graphite sheet first.</div>
+
+<footer>
+All numbers are illustrative for a 10 m, 100 mm diameter, 0.5 mm wall tube and are meant to show the structure of the calculation, not to match their hardware. State the assumptions aloud and let them correct the geometry &mdash; that is the answer they are grading.
+</footer>
+</div>
+
+<script>
+var C={th:"var(--warm)",str:"var(--str)",hp:"var(--go)",mat:"var(--cold)"};
+var Q=[
+{c:"th",t:"Boom thermal",q:"Why does a tube in sunlight hold such a large circumferential gradient?",a:"The sunlit half absorbs over the projected width 2R and radiates over its own surface &pi;R, while the shaded half only radiates. The only thing linking them is conduction around a thin wall, <b>4kt&Delta;T/&pi;R</b>. For CFRP with transverse k near 2 W/mK that link is weak, so &Delta;T lands around <span class='n'>190 K</span>."},
+{c:"th",t:"Boom thermal",q:"Estimate the tip deflection from that gradient.",a:"&kappa; = &alpha;&Delta;T/D and &delta; = &kappa;L&sup2;/2. For 10 m, 100 mm diameter, &Delta;T 190 K: aluminium at 23 ppm/K gives <span class='n'>800 mm</span>, standard CFRP at 2 ppm/K gives <span class='n'>190 mm</span>, a tailored near-zero layup gives <span class='n'>10 mm</span>. <b>That spread is the entire argument for composite booms.</b>"},
+{c:"th",t:"Boom thermal",q:"Aluminium conducts far better. Why is composite still the answer?",a:"Because bowing scales with the product &alpha;&Delta;T, and CTE moves by a factor of twenty while conductivity only moves &Delta;T by about three. You take the low CTE and then <b>buy the conduction back separately</b> with a thin liner or graphite wrap. Attacking the bigger term first is the point."},
+{c:"th",t:"Boom thermal",q:"How would you reduce &Delta;T without changing the structure?",a:"Short the circumference thermally &mdash; a thin aluminium liner or pitch-fibre wrap takes &Delta;T from roughly 190 K to 70 K. Then coatings: bare CFRP is nearly black with &alpha;/&epsilon; near 1, so a lower-&alpha; finish drops the absolute temperature. An <b>open or slotted section</b> is the bigger structural change, letting sunlight reach the far wall."},
+{c:"th",t:"Cycling",q:"What is thermal snap?",a:"The transient at eclipse entry and exit. The shadow edge passes in seconds, curvature changes over a couple of minutes, and any sudden strain release &mdash; a joint slipping, a wrinkle popping &mdash; couples in as an impulse. <b>It caused the Hubble solar array jitter</b>, which is the reference to name."},
+{c:"th",t:"Cycling",q:"What is thermal flutter and are you at risk here?",a:"A self-excited oscillation where bending changes the sun incidence, which changes the heating, which changes the bending. It needs the thermal and structural timescales to be comparable &mdash; <b>Boley number near 1</b>. Here &tau;_T &asymp; 140 s against a 0.8 s structural period, so B &asymp; 180 and you are safely quasi-static. Add the membrane and the frequency drops, so quote the vehicle number not the boom number."},
+{c:"th",t:"Cycling",q:"How fast does the boom respond thermally?",a:"&tau; = &rho;ct/(4&epsilon;&sigma;T&sup3;). For 0.5 mm CFRP at 300 K that is 720/5.2 &asymp; <span class='n'>140 s</span>. Thin-walled structures equilibrate in minutes, which is why they track the environment rather than averaging it."},
+{c:"th",t:"Cycling",q:"How many cycles over life, and why does it matter?",a:"About 15.6 orbits a day, so roughly <span class='n'>5,700 cycles per year</span>. It matters because composite <b>matrix microcracking</b> accumulates with cycling and changes both CTE and stiffness &mdash; so the boom you qualified is not the boom you have at end of life. Qualification has to cycle, not just cold-soak."},
+{c:"str",t:"Multi-boom",q:"What changes when there are four or five booms instead of one?",a:"Each sees a different sun incidence at every instant, so they bow by different amounts in different directions. The structure is <b>statically indeterminate</b> &mdash; thermal strain in one is reacted by the others through the membrane. Result: asymmetric tension, figure error, and a centre-of-pressure shift that feeds back as a disturbance torque."},
+{c:"str",t:"Multi-boom",q:"Why is that worse during a service pass?",a:"Because the vehicle is slewing to track a ground target, so the sun angle on every boom is changing continuously. The distortion pattern <b>rotates while you are trying to point</b>. It is not a static bias you can calibrate out once &mdash; it is a function of attitude and season."},
+{c:"str",t:"Structures",q:"How does a thin-walled boom actually fail?",a:"Local shell buckling before global Euler. &sigma;_cr &asymp; 0.6Et/R for a perfect cylinder, but real tubes carry <b>imperfection knockdown factors of 0.2 to 0.5</b>, so you design well below the classical value. A thermally bowed boom also loads eccentrically, which eats further margin."},
+{c:"str",t:"Structures",q:"What is the catch with rolled or open-section booms?",a:"Two. <b>Torsional stiffness</b> of an open thin-walled section is very poor. And <b>stowage creep</b> &mdash; a boom rolled for months takes a viscoelastic set and deploys to the wrong shape, which puts a clock on how long the article can sit before launch."},
+{c:"str",t:"Structures",q:"What non-thermal effect can rival thermal strain in a composite?",a:"<b>Moisture</b>. Composites absorb water on the ground and release it in vacuum, and the dimensional change from that can be comparable to the thermal strain. It is why flight composites get baked out and why the first weeks on orbit can show slow shape drift."},
+{c:"hp",t:"Heat pipes",q:"Would you use a heat pipe to fix the boom gradient?",a:"No, and say why. The path is 100 mm around a tube &mdash; a few grams of pyrolytic graphite sheet at 1000&ndash;1900 W/mK, or a thin aluminium liner, solves it passively with no fluid, no charge, no leak path and no ground-test orientation constraint. <b>Heat pipes earn their mass moving watts over metres, not kelvins across a tube.</b>"},
+{c:"hp",t:"Heat pipes",q:"Name the heat pipe limits.",a:"<b>Capillary, boiling, entrainment, sonic, viscous.</b> Capillary is usually the design limit. Boiling is the one people forget &mdash; nucleation inside the wick blocks the liquid return path, which is a different failure from meniscus dryout and is worse without buoyancy."},
+{c:"hp",t:"Heat pipes",q:"What is frozen startup?",a:"Ammonia freezes at 195 K. If the condenser is frozen when you apply power, vapour flows to a blocked section, cannot condense, and the evaporator dries out. It is a real qualification case &mdash; handled with heaters, a warm parking attitude, or a design that tolerates partial blockage."},
+{c:"hp",t:"Heat pipes",q:"Why is ground testing a heat pipe tricky?",a:"Gravity. An axially grooved pipe is sensitive to fractions of a degree of tilt, and testing with the evaporator low turns it into a thermosyphon &mdash; performance that will not exist on orbit. You test level, and you are explicit in the review about what is verified versus inferred."},
+{c:"hp",t:"Heat pipes",q:"When is a loop heat pipe the right call?",a:"When the heat has to <b>cross a hinge or take a long flexible route</b>. An LHP confines the wick to the evaporator and uses smooth small-bore tubing everywhere else, so it can bend. The price is harder startup at low power and sensitivity to non-condensable gas in the compensation chamber."},
+{c:"mat",t:"Materials",q:"How do you get a near-zero CTE composite?",a:"Carbon fibres have slightly negative axial CTE while the resin is strongly positive, so a <b>tailored layup</b> can null the net expansion in a chosen direction. It is a design variable, not a material property &mdash; which also means the qualified CTE depends on the layup being built as drawn."},
+{c:"mat",t:"Materials",q:"What does the environment do to an exposed composite boom?",a:"Atomic oxygen erodes exposed resin on the ram side, UV embrittles and darkens it, raising &alpha; and therefore temperature over life. Both are handled with a coating or a thin metallised outer layer &mdash; which conveniently also serves as the circumferential conduction path."}
+];
+document.getElementById("grid").innerHTML=Q.map(function(p,i){
+ return '<article class="card" style="--c:'+C[p.c]+'"><div class="hd"><span class="pid">Q-'+String(i+1).padStart(2,"0")+'</span><span class="ptag">'+p.t+'</span></div><button class="qbtn">'+p.q+'</button><div class="ans">'+p.a+'</div></article>';
+}).join("");
+document.addEventListener("click",function(e){var b=e.target.closest(".qbtn");if(b)b.closest(".card").classList.toggle("open");});
+</script>

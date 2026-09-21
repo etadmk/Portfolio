@@ -1,0 +1,344 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Reflect Orbital — mechanical engineer technical prep</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0A0E18;--panel:#111A28;--panel2:#0E1522;--line:#1E2C40;--line2:#2B3E5C;
+--ink:#E6ECF5;--mute:#8394AC;--dim:#5A6C86;
+--sun:#F5C542;--mir:#8FB8E8;--earth:#3FBFA0;--str:#B189F2;--warn:#EE6BA6;--hot:#F5843B}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font-family:"IBM Plex Sans",system-ui,sans-serif;font-size:15px;line-height:1.62;padding:0 0 80px;background-image:linear-gradient(180deg,#0F1728 0%,#0A0E18 460px)}
+.wrap{max-width:1080px;margin:0 auto;padding:0 22px}
+header.top{padding:44px 0 24px;border-bottom:1px solid var(--line)}
+.eyebrow{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--dim)}
+h1{font-family:"Barlow Condensed",sans-serif;font-weight:600;font-size:clamp(36px,6.5vw,60px);line-height:.98;text-transform:uppercase;margin:10px 0 12px}
+h1 em{font-style:normal;color:var(--sun)}
+.lede{color:var(--mute);max-width:64ch}
+.board{display:grid;grid-template-columns:repeat(auto-fit,minmax(118px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);margin:24px 0 0}
+.cell{background:var(--panel2);padding:11px 13px}
+.cell .k{font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--dim)}
+.cell .v{font-family:"Barlow Condensed",sans-serif;font-size:26px;font-weight:500;line-height:1.12;margin-top:2px}
+h2{font-family:"Barlow Condensed",sans-serif;font-weight:600;font-size:32px;text-transform:uppercase;letter-spacing:.04em;margin:0 0 4px}
+.sechead{border-top:1px solid var(--line);padding-top:26px;margin-top:52px}
+.secnote{color:var(--dim);font-size:13.5px;margin-bottom:22px;max-width:72ch}
+h3{font-family:"Barlow Condensed",sans-serif;font-weight:600;font-size:21px;text-transform:uppercase;letter-spacing:.03em;margin:26px 0 8px}
+p{margin-bottom:13px;max-width:74ch}
+.fig{background:var(--panel);border:1px solid var(--line);padding:18px 18px 12px;margin:18px 0 22px}
+.fig figcaption{font-family:"IBM Plex Mono",monospace;font-size:11.5px;color:var(--dim);margin-top:10px}
+svg{display:block;width:100%;height:auto}
+.tl{font-family:"IBM Plex Mono",monospace;font-size:11px;fill:var(--mute)}
+.tb{font-family:"IBM Plex Sans",sans-serif;font-size:12.5px;font-weight:500;fill:var(--ink)}
+.tn{font-family:"IBM Plex Mono",monospace;font-size:11px;fill:var(--dim)}
+.eqbox{background:var(--panel2);border-left:2px solid var(--sun);padding:12px 15px;font-family:"IBM Plex Mono",monospace;font-size:13px;color:#C7D4E6;margin:14px 0;white-space:pre-wrap;overflow-x:auto}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:13px}
+.card{background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--c,var(--sun))}
+.card .hd{display:flex;gap:9px;padding:11px 14px 0;align-items:center}
+.pid{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.1em;color:var(--c,var(--sun))}
+.ptag{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--dim)}
+button{font:inherit;cursor:pointer;border:none;background:none;color:inherit;text-align:left}
+.qbtn{padding:7px 14px 13px;width:100%;font-size:14.5px;line-height:1.5}
+.qbtn::after{content:"tap to answer";display:block;font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--dim);margin-top:9px}
+.card.open .qbtn::after{content:"hide"}
+.ans{display:none;padding:13px 14px 15px;border-top:1px dashed var(--line2);background:var(--panel2);font-size:14px;color:#C7D4E6}
+.card.open .ans{display:block}
+.ans b{color:var(--c,var(--sun));font-weight:500;font-family:"IBM Plex Mono",monospace;font-size:13.5px}
+.ans .n{font-family:"IBM Plex Mono",monospace;color:#fff}
+ul{margin:0 0 14px 20px;max-width:74ch}li{margin-bottom:7px}
+table{border-collapse:collapse;width:100%;margin:14px 0;font-size:13.5px}
+th,td{text-align:left;padding:8px 11px;border-bottom:1px solid var(--line)}
+th{font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--dim);font-weight:400}
+td.m{font-family:"IBM Plex Mono",monospace;color:#fff}
+.callout{background:var(--panel);border:1px solid var(--line);border-top:3px solid var(--warn);padding:15px 17px;margin:20px 0}
+.callout .lbl{font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--warn);margin-bottom:6px}
+footer{margin-top:56px;border-top:1px solid var(--line);padding-top:18px;color:var(--dim);font-size:12.5px}
+@media (max-width:600px){.grid{grid-template-columns:1fr}h1{font-size:34px}}
+</style>
+
+<div class="wrap">
+<header class="top">
+<div class="eyebrow">Technical round &middot; mechanical engineer</div>
+<h1>Pointing a mirror<br><em>the size of a house</em></h1>
+<p class="lede">Public facts as of mid-2026: E&auml;rendil-1 carries an 18 &times; 18 m mylar reflector of about 16 kg, FCC-approved in July, projecting a roughly 5 km spot. The roadmap runs to 54 &times; 54 m mirrors and tens of thousands of units. Everything below is reconstructed from those numbers &mdash; quote it with the assumption attached.</p>
+<div class="board">
+<div class="cell"><div class="k">Mirror</div><div class="v" style="color:var(--mir)">18 &times; 18 m</div></div>
+<div class="cell"><div class="k">Film mass</div><div class="v">16 kg</div></div>
+<div class="cell"><div class="k">Areal density</div><div class="v">49 g/m&sup2;</div></div>
+<div class="cell"><div class="k">Ground spot</div><div class="v" style="color:var(--sun)">~5 km</div></div>
+<div class="cell"><div class="k">Film inertia</div><div class="v">~430 kg&middot;m&sup2;</div></div>
+<div class="cell"><div class="k">First mode</div><div class="v" style="color:var(--warn)">~0.3 Hz</div></div>
+</div>
+</header>
+
+<div class="sechead">
+<h2>01 &middot; Why the spot is 5 km</h2>
+<p class="secnote">Derive this in the room and you have established more than any answer about your background could.</p>
+</div>
+
+<p>The spot is not set by the mirror. A flat mirror does not focus &mdash; it forms an image of the source, and the source is the Sun, which subtends about <strong>0.53&deg;, or 9.3 mrad</strong>. Reflect that off a flat surface and the beam diverges at the Sun's own angular width no matter how big the mirror is.</p>
+
+<div class="eqbox">spot &asymp; altitude &times; sun angular diameter
+     &asymp; 540 km &times; 9.3 mrad
+     &asymp; 5.0 km          &larr; their published number
+
+so the quoted spot implies an orbit near 540 km</div>
+
+<figure class="fig">
+<svg viewBox="0 0 700 300" role="img" aria-label="Sunlight strikes a small mirror in orbit and spreads to a five kilometre spot on the ground because the sun has an angular width of 9.3 milliradians">
+<line x1="30" y1="40" x2="296" y2="66" stroke="#F5C542" stroke-width="1.6"/>
+<line x1="30" y1="62" x2="296" y2="74" stroke="#F5C542" stroke-width="1.6"/>
+<line x1="30" y1="84" x2="296" y2="82" stroke="#F5C542" stroke-width="1.6"/>
+<text class="tn" x="34" y="30" fill="#F5C542">sunlight</text>
+<rect x="298" y="56" width="10" height="38" rx="2" fill="#8FB8E8"/>
+<text class="tb" x="316" y="52">mirror, 18 m</text>
+<path d="M305 60 L648 190" stroke="#8FB8E8" stroke-width="1.5"/>
+<path d="M305 90 L648 240" stroke="#8FB8E8" stroke-width="1.5"/>
+<path d="M305 75 L648 215" stroke="#8FB8E8" stroke-width="0.8" stroke-dasharray="4 4"/>
+<text class="tn" x="350" y="122" fill="#F5C542">diverges at 9.3 mrad &mdash; the Sun's own width</text>
+<path d="M400 268 Q 540 252 692 266" fill="none" stroke="#3FBFA0" stroke-width="3"/>
+<line x1="636" y1="190" x2="636" y2="240" stroke="#EE6BA6" stroke-width="2.5"/>
+<text class="tn" x="600" y="182" text-anchor="middle" fill="#EE6BA6">5 km spot</text>
+<text class="tn" x="440" y="290" fill="#3FBFA0">ground</text>
+</svg>
+<figcaption>Fig 1 &mdash; Divergence comes from the Sun, not the optic. A bigger mirror gives a brighter spot, not a smaller one.</figcaption>
+</figure>
+
+<p>The follow-on is equally clean. Ground illuminance is solar illuminance scaled by the area ratio:</p>
+
+<div class="eqbox">E &asymp; E_sun &times; (A_mirror / A_spot) &times; reflectivity
+  &asymp; 100,000 lux &times; (324 / 1.96&times;10&#8311;) &times; 0.9
+  &asymp; 1.5 lux
+
+full moon &asymp; 0.25 lux  &rarr;  roughly 6 full moons</div>
+
+<p>Their published claim is about four times a full moon inside the beam. Landing within a factor of two of a company's headline number with two lines of arithmetic is the strongest single thing you can do in a technical round.</p>
+
+<div class="sechead">
+<h2>02 &middot; The pointing problem</h2>
+<p class="secnote">This is the actual mechanical engineering, and it has two halves: how fast you must slew, and what the structure does when you try.</p>
+</div>
+
+<figure class="fig">
+<svg viewBox="0 0 700 280" role="img" aria-label="The mirror normal bisects the angle between the incoming sun vector and the outgoing beam, so rotating the mirror by one degree moves the beam by two degrees">
+<line x1="40" y1="52" x2="326" y2="138" stroke="#F5C542" stroke-width="2" marker-end="url(#m)"/>
+<text class="tn" x="58" y="42" fill="#F5C542">from Sun</text>
+<line x1="332" y1="142" x2="648" y2="228" stroke="#8FB8E8" stroke-width="2" marker-end="url(#m)"/>
+<text class="tn" x="510" y="200" fill="#8FB8E8">to ground target</text>
+<line x1="330" y1="140" x2="298" y2="44" stroke="#B189F2" stroke-width="1.6" stroke-dasharray="5 3"/>
+<text class="tn" x="228" y="36" fill="#B189F2">mirror normal</text>
+<line x1="272" y1="180" x2="388" y2="100" stroke="#E6ECF5" stroke-width="3.5"/>
+<path d="M314 92 A 62 62 0 0 1 348 98" fill="none" stroke="#5A6C86"/>
+<text class="tn" x="328" y="84" text-anchor="middle">&theta;</text>
+<path d="M348 98 A 62 62 0 0 1 378 124" fill="none" stroke="#5A6C86"/>
+<text class="tn" x="386" y="100">&theta;</text>
+<text class="tb" x="350" y="262" text-anchor="middle">Rotate the mirror by 1&deg; and the beam moves 2&deg;</text>
+<defs><marker id="m" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.6" stroke-linecap="round"/></marker></defs>
+</svg>
+<figcaption>Fig 2 &mdash; The normal bisects the two vectors, which halves the slew rate the mechanism has to deliver.</figcaption>
+</figure>
+
+<div class="eqbox">line-of-sight rate to a fixed ground point, overhead pass:
+  &omega; = v/h = 7600 / 540,000 = 0.0141 rad/s = 0.81 &deg;/s
+
+mirror rate = half of that            &asymp; 0.40 &deg;/s
+momentum at that rate, I &asymp; 430 kg&middot;m&sup2;:
+  H = I&omega; = 430 &times; 0.0070          &asymp; 3.0 N&middot;m&middot;s</div>
+
+<p>Half a degree per second sounds trivial until you multiply by the inertia. Three newton-metre-seconds is a serious wheel for a small satellite, and it has to be dumped between passes. That single number frames the whole ADCS conversation.</p>
+
+<h3>And the structure fights you</h3>
+
+<figure class="fig">
+<svg viewBox="0 0 700 210" role="img" aria-label="Frequency line showing the required control bandwidth well below the first flexible mode of the tensioned membrane">
+<line x1="60" y1="120" x2="660" y2="120" stroke="#2B3E5C" stroke-width="1.5"/>
+<line x1="130" y1="112" x2="130" y2="128" stroke="#5A6C86"/><text class="tl" x="130" y="146" text-anchor="middle">0.01</text>
+<line x1="270" y1="112" x2="270" y2="128" stroke="#5A6C86"/><text class="tl" x="270" y="146" text-anchor="middle">0.05</text>
+<line x1="410" y1="112" x2="410" y2="128" stroke="#5A6C86"/><text class="tl" x="410" y="146" text-anchor="middle">0.3</text>
+<line x1="550" y1="112" x2="550" y2="128" stroke="#5A6C86"/><text class="tl" x="550" y="146" text-anchor="middle">1.0</text>
+<text class="tn" x="360" y="176" text-anchor="middle">frequency, Hz</text>
+<rect x="90" y="88" width="180" height="8" rx="4" fill="#3FBFA0"/>
+<text class="tn" x="180" y="78" text-anchor="middle" fill="#3FBFA0">usable control bandwidth</text>
+<line x1="410" y1="58" x2="410" y2="112" stroke="#EE6BA6" stroke-width="2.5"/>
+<circle cx="410" cy="58" r="5" fill="#EE6BA6"/>
+<text class="tn" x="420" y="52" fill="#EE6BA6">first membrane mode ~0.3 Hz</text>
+<text class="tn" x="360" y="200" text-anchor="middle">Close the loop anywhere near the mode and you excite the thing you are trying to point</text>
+</svg>
+<figcaption>Fig 3 &mdash; f&#8321; &asymp; (1/2L)&radic;(T/&sigma;_A). At 5 N/m tension on 49 g/m&sup2; film over 18 m that lands near 0.3 Hz.</figcaption>
+</figure>
+
+<p>A tensioned membrane has almost no stiffness and almost no damping. Control bandwidth has to sit roughly a decade below the first mode, so you are steering a 430 kg&middot;m&sup2; object with a loop that updates meaningfully every twenty seconds or so. Higher tension raises the mode but loads the booms and the film. <strong>That trade &mdash; tension versus boom mass versus achievable bandwidth &mdash; is the central structural argument of the vehicle.</strong></p>
+
+<div class="sechead">
+<h2>03 &middot; How flat does it have to be?</h2>
+<p class="secnote">Less flat than people assume, and the number is worth knowing because it reframes the problem.</p>
+</div>
+
+<figure class="fig">
+<svg viewBox="0 0 700 250" role="img" aria-label="A flat membrane produces a tight beam while a wrinkled membrane scatters light outside the intended spot">
+<text class="tb" x="170" y="42" text-anchor="middle">Flat within spec</text>
+<line x1="70" y1="86" x2="272" y2="86" stroke="#8FB8E8" stroke-width="3.5"/>
+<line x1="110" y1="92" x2="140" y2="196" stroke="#F5C542" stroke-width="1.4"/>
+<line x1="170" y1="92" x2="176" y2="196" stroke="#F5C542" stroke-width="1.4"/>
+<line x1="230" y1="92" x2="212" y2="196" stroke="#F5C542" stroke-width="1.4"/>
+<rect x="132" y="198" width="88" height="7" rx="3" fill="#3FBFA0"/>
+<text class="tn" x="176" y="226" text-anchor="middle" fill="#3FBFA0">beam stays on target</text>
+
+<line x1="350" y1="40" x2="350" y2="220" stroke="#1E2C40" stroke-dasharray="5 4"/>
+
+<text class="tb" x="530" y="42" text-anchor="middle">Wrinkled</text>
+<path d="M430 86 Q446 78 462 88 T494 86 T526 90 T558 84 T590 88 T622 86" fill="none" stroke="#8FB8E8" stroke-width="3.5"/>
+<line x1="452" y1="92" x2="410" y2="196" stroke="#F5C542" stroke-width="1.4"/>
+<line x1="494" y1="92" x2="524" y2="196" stroke="#F5C542" stroke-width="1.4"/>
+<line x1="530" y1="94" x2="486" y2="196" stroke="#F5C542" stroke-width="1.4"/>
+<line x1="590" y1="92" x2="638" y2="196" stroke="#F5C542" stroke-width="1.4"/>
+<rect x="470" y="198" width="70" height="7" rx="3" fill="#3FBFA0"/>
+<text class="tn" x="530" y="226" text-anchor="middle" fill="#EE6BA6">light lands outside the spot</text>
+</svg>
+<figcaption>Fig 4 &mdash; Slope error &delta; broadens the beam by 2&delta;. Scattered light is both a performance loss and the astronomers' complaint.</figcaption>
+</figure>
+
+<div class="eqbox">allow ~20% beam broadening on top of 9.3 mrad:
+  &radic;(11.2&sup2; &minus; 9.3&sup2;) &asymp; 6.2 mrad of slope-induced spread
+  &delta; = 6.2/2 &asymp; 3 mrad RMS slope error &asymp; 0.18&deg;
+
+for a wrinkle of 1 m wavelength that is ~0.5 mm amplitude</div>
+
+<p>Millimetre flatness over eighteen metres. That is demanding for a tensioned polymer film but it is <strong>a structures and metrology requirement, not an optical-shop one</strong>. Saying that out loud shows you have calibrated the problem rather than assumed it is a telescope.</p>
+
+<div class="sechead">
+<h2>04 &middot; Attitude is the ballistic coefficient</h2>
+<p class="secnote">The non-obvious systems insight, and the one most likely to earn a real conversation.</p>
+</div>
+
+<figure class="fig">
+<svg viewBox="0 0 700 230" role="img" aria-label="Bar comparison of solar radiation pressure, drag when deployed, and drag when feathered edge-on">
+<text class="tl" x="220" y="56" text-anchor="end">solar radiation pressure</text>
+<rect x="232" y="42" width="200" height="20" rx="3" fill="#F5C542"/>
+<text class="tn" x="442" y="57">2.9 mN</text>
+<text class="tl" x="220" y="106" text-anchor="end">drag, mirror deployed</text>
+<rect x="232" y="92" width="280" height="20" rx="3" fill="#EE6BA6"/>
+<text class="tn" x="522" y="107">4.1 mN</text>
+<text class="tl" x="220" y="156" text-anchor="end">drag, feathered edge-on</text>
+<rect x="232" y="142" width="4" height="20" rx="2" fill="#3FBFA0"/>
+<text class="tn" x="246" y="157">0.03 mN</text>
+<text class="tn" x="350" y="200" text-anchor="middle">Deployed ballistic coefficient &asymp; 0.07 kg/m&sup2;. Feathered &asymp; 11 kg/m&sup2;.</text>
+<text class="tn" x="350" y="220" text-anchor="middle">Assumes 540 km, &rho; = 2&times;10&#8315;&sup1;&sup3; kg/m&sup3;, C_d 2.2, 50 kg &mdash; order of magnitude only</text>
+</svg>
+<figcaption>Fig 5 &mdash; A 324 m&sup2; sail on a ~50 kg bus. Face-on it decays; edge-on it survives. Pointing <em>is</em> orbit maintenance.</figcaption>
+</figure>
+
+<p>With an areal density near 50 g/m&sup2;, this vehicle has the ballistic coefficient of a solar sail. Deployed face-on it would decay in weeks. The company has publicly said the satellite defaults to a low-reflectivity orientation and tilts away when not serving a customer &mdash; that is usually framed as a light-pollution mitigation, and it is, but <strong>it is also mandatory for orbit life</strong>. Solar radiation pressure and drag are the same order of magnitude and both scale with projected area, so attitude is simultaneously the optical function, the disturbance environment and the orbit-maintenance strategy.</p>
+
+<div class="callout">
+<div class="lbl">The disturbance torque nobody budgets for</div>
+Solar radiation pressure acts at the centre of pressure. Any offset from the centre of mass &mdash; from asymmetric deployment, a wrinkle, or a torn corner &mdash; turns 2.9 mN into a continuous torque. At a 0.5 m offset that is 1.5 mN&middot;m, which accumulates roughly 8 N&middot;m&middot;s of momentum per orbit. Magnetorquers at 540 km give order 0.3 mN&middot;m. The desaturation budget is genuinely tight, and asking about it is a strong question.
+</div>
+
+<div class="sechead">
+<h2>05 &middot; Thermal and materials</h2>
+<p class="secnote">Where your background gives you something concrete to say.</p>
+</div>
+
+<div class="eqbox">thermal capacity per area = 49 g/m&sup2; &times; 1200 J/kgK &asymp; 59 J/m&sup2;K
+radiative h = 4&epsilon;&sigma;T&sup3; &asymp; 3.2 W/m&sup2;K at 260 K
+&tau; = 59 / 3.2 &asymp; 19 s
+
+the film reaches thermal equilibrium in under a minute</div>
+
+<p>That is the thermal snap problem. Crossing the terminator, an 18 m membrane changes temperature almost instantly while the booms lag. With mylar at roughly 17 ppm/K, a 100 K swing moves 18 m by <strong>about 30 mm</strong>. If the booms are near-zero-CTE composite, that entire mismatch has to be absorbed by the tensioning system &mdash; constant-force springs or compliant corner fittings &mdash; or the film goes slack in eclipse and over-tensioned in sun. Slack film is wrinkled film, and wrinkled film is scattered light.</p>
+
+<table>
+<tr><th>Environment</th><th>What it does here</th></tr>
+<tr><td class="m">Atomic oxygen</td><td>Mylar is a polymer with an erosion yield near Kapton's. The aluminised face protects the ram side partially; the back does not. Sets orientation rules and life.</td></tr>
+<tr><td class="m">UV</td><td>Embrittles the film and raises absorptivity. An embrittled membrane tears from a micrometeoroid hole instead of tolerating it.</td></tr>
+<tr><td class="m">Micrometeoroids</td><td>Unlike a radiator, a hole in a mirror is graceful &mdash; you lose a little area. The risk is tear propagation, which is why ripstop patterning matters.</td></tr>
+<tr><td class="m">Vacuum blocking</td><td>Film layers packed against each other for months can stick. Deployment is single-shot with no recovery, so interleaving and surface treatment are real design work.</td></tr>
+<tr><td class="m">Deployment dynamics</td><td>Unfurling 324 m&sup2; exchanges momentum with the bus. Getting it flat without tumbling is as hard as getting it out.</td></tr>
+</table>
+
+<div class="sechead">
+<h2>06 &middot; Likely questions</h2>
+<p class="secnote">Answer out loud before tapping.</p>
+</div>
+<div class="grid" id="grid"></div>
+
+<div class="sechead">
+<h2>07 &middot; Your bridges &mdash; and the honest gap</h2>
+<p class="secnote">This is not a thermofluids company. Do not pretend otherwise; map what actually transfers.</p>
+</div>
+<ul>
+<li><strong>High-speed imaging and OpenCV.</strong> At UIUC you extracted wave velocity from high-speed video of falling films. Deployment characterisation and membrane wrinkle metrology are the same discipline: get geometry and kinematics out of images. This is your strongest single bridge and almost nobody else will have it.</li>
+<li><strong>Test rig fabrication and DAQ.</strong> Deployment testing needs gravity offload rigs, instrumented fixtures and repeatable procedures. You have built and debugged rigs and separated instrumentation artefacts from real physics.</li>
+<li><strong>Surface and materials characterisation.</strong> SEM, wettability, coating behaviour, vacuum and glovebox work from Zap. Film handling and surface condition are central here.</li>
+<li><strong>Thermal cycling and CTE.</strong> You know the fatigue and mismatch story cold, and the 30 mm expansion problem is exactly that story on a membrane.</li>
+<li><strong>Your transient conduction solver.</strong> The membrane thermal transient at eclipse entry is a small, well-posed version of what you already wrote.</li>
+<li><strong>MarineSitu LP/MILP scheduling.</strong> A constellation serving customer requests while avoiding observatories, respecting sun-target-satellite geometry and slew limits is a constrained scheduling problem. At 50,000 satellites it is <em>the</em> software problem. Say this.</li>
+</ul>
+
+<div class="callout">
+<div class="lbl">Handle the gap directly</div>
+You have not worked deployable structures or attitude control. Say so once, early, and pivot: <em>"I haven't worked deployables &mdash; my experience is experimental thermal-fluids, test hardware and characterisation. What I'd bring on day one is rig building, instrumentation and getting real data out of a test article. I'd expect to be learning the structures side."</em> That is a better answer than a thin claim, and it is true.
+</div>
+
+<div class="sechead">
+<h2>08 &middot; Ask them</h2>
+</div>
+<ul>
+<li>"How do you test deployment on the ground &mdash; gravity offload on a full 18 m article, or sub-scale plus analysis?"</li>
+<li>"What sets the flatness requirement in practice &mdash; beam quality on target, or stray light outside it?"</li>
+<li>"Is control bandwidth limited by the first membrane mode, and did that drive the tension level?"</li>
+<li>"How much of the disturbance budget is solar radiation pressure torque from centre-of-pressure offset, and how do you desaturate?"</li>
+<li>"Feathering when not serving reads as a light-pollution measure &mdash; is it also doing the work on drag and orbit life?"</li>
+<li>"At 50,000 units, is tasking a scheduling problem you're already solving? My current work is a constrained scheduler for exactly that shape of problem."</li>
+<li>"What broke on the first deployment test that wasn't in the model?"</li>
+</ul>
+
+<div class="sechead">
+<h2>09 &middot; Cheat card</h2>
+</div>
+<div class="eqbox">spot = altitude &times; 9.3 mrad          540 km &rarr; 5 km
+E = E_sun &times; A_mirror/A_spot &times; R   &rarr; ~1.5 lux &asymp; 6 full moons
+mirror rotates half as fast as the beam
+&omega;_LOS = v/h = 0.81 &deg;/s  &rarr; mirror 0.40 &deg;/s  &rarr; H &asymp; 3 N&middot;m&middot;s
+f&#8321; = (1/2L)&radic;(T/&sigma;_A) &asymp; 0.3 Hz &rarr; bandwidth must sit a decade below
+SRP = 2(S/c)A &asymp; 2.9 mN   drag deployed &asymp; 4.1 mN   feathered &asymp; 0.03 mN
+&tau;_thermal &asymp; 19 s   CTE swing over 18 m &asymp; 30 mm
+
+Lead with: the spot size derivation, then the brightness check.
+Be straight that deployables are new; sell rigs, imaging and scheduling.</div>
+
+<footer>
+Reconstructed from public reporting: 18 &times; 18 m mylar reflector, ~16 kg, FCC approval July 2026, ~5 km spot, roadmap to 54 &times; 54 m and tens of thousands of units. Altitude, bus mass, tension and atmospheric density are assumed, not published &mdash; state them as assumptions and let the interviewer correct you.
+</footer>
+</div>
+
+<script>
+var C={opt:"var(--sun)",str:"var(--str)",adcs:"var(--mir)",env:"var(--warn)",sys:"var(--earth)"};
+var Q=[
+{c:"opt",t:"Optics",q:"Why is the ground spot about 5 km across?",a:"A flat mirror images the source rather than focusing. The Sun subtends <b>9.3 mrad</b>, so the beam diverges at that angle regardless of mirror size. At 540 km altitude that is <span class='n'>5.0 km</span>. Mirror size sets brightness, not spot size."},
+{c:"opt",t:"Optics",q:"How bright is the spot, roughly?",a:"Scale solar illuminance by the area ratio: <b>100,000 lux &times; 324/1.96&times;10&#8311; &times; 0.9 &asymp; 1.5 lux</b>. A full moon is about 0.25 lux, so roughly <span class='n'>6 full moons</span> &mdash; within a factor of two of the company's own claim."},
+{c:"opt",t:"Optics",q:"How flat does the membrane have to be?",a:"Slope error &delta; broadens the beam by 2&delta;. Allowing 20% broadening on 9.3 mrad gives about <b>3 mrad RMS slope</b>, which for metre-scale wrinkles is roughly <span class='n'>0.5 mm amplitude</span>. Millimetre flatness over 18 m &mdash; a structures and metrology problem, not an optical-shop one."},
+{c:"opt",t:"Optics",q:"Does a bigger mirror give a smaller spot?",a:"No. It gives a <b>brighter</b> spot. Divergence is fixed by the Sun's angular width. This is the most common misconception about the whole concept and getting it right immediately signals you understand the physics."},
+{c:"adcs",t:"Pointing",q:"How fast does the mirror have to slew?",a:"Line of sight to a fixed ground point rotates at v/h = 7600/540,000 = <b>0.81 &deg;/s</b> at overhead. Because the normal bisects, the mirror only needs <span class='n'>0.40 &deg;/s</span> &mdash; the law of reflection halves your mechanism requirement."},
+{c:"adcs",t:"Pointing",q:"Why does 0.4 degrees per second turn out to be hard?",a:"Inertia. The film alone is about <b>430 kg&middot;m&sup2;</b> (mL&sup2;/12 for a flat plate), so H = I&omega; &asymp; <span class='n'>3 N&middot;m&middot;s</span> of stored momentum. That is a large wheel for a small satellite, and it has to be desaturated between passes."},
+{c:"adcs",t:"Pointing",q:"What limits control bandwidth?",a:"The first membrane mode. <b>f&#8321; = (1/2L)&radic;(T/&sigma;_A)</b> &mdash; at 5 N/m on 49 g/m&sup2; over 18 m that is near 0.3 Hz, with almost no inherent damping. Close the loop within a decade of it and you excite the structure you are trying to point."},
+{c:"adcs",t:"Pointing",q:"How would you raise the first mode?",a:"More tension. But tension loads the booms, which drives boom mass and stowed volume, and over-tensioning a thin polymer risks creep and tear propagation. <b>Tension versus boom mass versus achievable bandwidth</b> is the core structural trade."},
+{c:"adcs",t:"Pointing",q:"What is the dominant disturbance torque?",a:"Solar radiation pressure acting through a centre-of-pressure offset. <b>F = 2(S/c)A &asymp; 2.9 mN</b> at normal incidence; a 0.5 m offset gives ~1.5 mN&middot;m, accumulating roughly <span class='n'>8 N&middot;m&middot;s per orbit</span>. Magnetorquers at this altitude produce order 0.3 mN&middot;m, so the desaturation budget is genuinely tight."},
+{c:"sys",t:"Systems",q:"Why must the satellite feather when not serving?",a:"Ballistic coefficient. At 324 m&sup2; and ~50 kg, B &asymp; <b>0.07 kg/m&sup2;</b> face-on &mdash; solar-sail territory, decaying in weeks. Edge-on it is around 11 kg/m&sup2;. The company frames feathering as light-pollution mitigation; it is also <span class='n'>mandatory for orbit life</span>."},
+{c:"sys",t:"Systems",q:"How do SRP and drag compare here?",a:"Same order. SRP &asymp; 2.9 mN, drag at 540 km &asymp; 4.1 mN with &rho; = 2&times;10&#8315;&sup1;&sup3;. Both scale with projected area, so <b>attitude simultaneously controls the optical function, the disturbance environment and the orbit</b>. Flag the density assumption &mdash; it swings 10&times; over the solar cycle."},
+{c:"sys",t:"Systems",q:"At 50,000 satellites, what is the hard problem?",a:"Tasking. Each service requires a valid Sun&ndash;satellite&ndash;target geometry, respects slew rate limits, avoids observatories and other protected sites, and competes with other customers. That is a <b>constrained scheduling problem</b> at enormous scale, and it is where an optimisation background is directly relevant."},
+{c:"str",t:"Structures",q:"How do you package 324 m&sup2; into a launch volume?",a:"Z-fold, wrap-rib or spooled onto deployable booms. The real difficulties are <b>blocking</b> &mdash; film layers sticking after months packed in vacuum &mdash; and deployment dynamics, since unfurling exchanges momentum with the bus and can tumble it. Deployment is single-shot with no recovery."},
+{c:"str",t:"Structures",q:"How would you test deployment on the ground?",a:"You cannot deploy 18 m of 49 g/m&sup2; film against 1 g without support. Options are gravity offload on an air table or suspension rig, deployment in a horizontal plane, sub-scale articles with analysis to bridge, and high-speed imaging to get kinematics. <b>Be explicit about what is verified versus inferred</b> &mdash; that honesty is the answer they want."},
+{c:"str",t:"Structures",q:"What does thermal cycling do to a tensioned membrane?",a:"Mylar is roughly 17 ppm/K. A 100 K swing across 18 m is about <b>30 mm</b> of length change. If the booms are near-zero-CTE composite, the tensioning system has to absorb all of it &mdash; constant-force springs or compliant corners. Otherwise the film is slack in eclipse and over-tensioned in sun."},
+{c:"env",t:"Environment",q:"How fast does the film respond thermally?",a:"Thermal capacity is about <b>59 J/m&sup2;K</b> and radiative h near 3.2 W/m&sup2;K, so &tau; &asymp; <span class='n'>19 seconds</span>. It equilibrates almost instantly at the terminator while the booms lag &mdash; the classic thermal snap that shows up as pointing jitter."},
+{c:"env",t:"Environment",q:"What does the space environment do to mylar?",a:"<b>Atomic oxygen</b> erodes it at a yield near Kapton's, worst on the ram face; the aluminised side offers partial protection. <b>UV</b> embrittles it, which matters because an embrittled film tears from a puncture instead of tolerating it. Ripstop patterning limits propagation."},
+{c:"env",t:"Environment",q:"Is micrometeoroid damage as serious here as on a radiator?",a:"No, and say why. A hole in a mirror costs a little area &mdash; <b>graceful degradation</b>. A hole in a fluid loop costs the inventory. The real mirror risk is <span class='n'>tear propagation</span> through a pre-stressed, UV-embrittled film, which is a fracture problem rather than a leak problem."},
+{c:"env",t:"Environment",q:"Why do astronomers object, in engineering terms?",a:"Two mechanisms. The intended beam is bright, but <b>scattered light from surface imperfections</b> goes everywhere else, and at constellation scale the diffuse contribution raises the whole sky background. Published modelling suggests a 50,000-satellite population could multiply natural dark-sky brightness several times over. Membrane flatness is therefore a regulatory parameter, not just a performance one."},
+{c:"sys",t:"Systems",q:"What would you want to measure first on the demo flight?",a:"Deployed shape and its stability &mdash; flatness, wrinkle spectrum, and how both change through a terminator crossing. Everything downstream (beam quality, stray light, pointing stability) is conditional on it, and it is the quantity hardest to verify on the ground. Tie this to your imaging and metrology experience."}
+];
+document.getElementById("grid").innerHTML=Q.map(function(p,i){
+ return '<article class="card" style="--c:'+C[p.c]+'"><div class="hd"><span class="pid">Q-'+String(i+1).padStart(2,"0")+'</span><span class="ptag">'+p.t+'</span></div><button class="qbtn">'+p.q+'</button><div class="ans">'+p.a+'</div></article>';
+}).join("");
+document.addEventListener("click",function(e){var b=e.target.closest(".qbtn");if(b)b.closest(".card").classList.toggle("open");});
+</script>

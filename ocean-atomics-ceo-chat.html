@@ -1,0 +1,287 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ocean Atomics — conversation prep</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#08121A;--panel:#0F1F2B;--panel2:#0C1922;--line:#1B3140;--line2:#27475C;
+--ink:#E4EEF4;--mute:#87A1B0;--dim:#5A7688;
+--sea:#3FBFC8;--brass:#E0A94A;--hull:#8FA9C0;--warn:#EE7095;--go:#7FCB6A;--pol:#B189F2}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font-family:"IBM Plex Sans",system-ui,sans-serif;font-size:15px;line-height:1.62;padding:0 0 80px;background-image:linear-gradient(180deg,#0C1B26 0%,#08121A 460px)}
+.wrap{max-width:1080px;margin:0 auto;padding:0 22px}
+header.top{padding:44px 0 24px;border-bottom:1px solid var(--line)}
+.eyebrow{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--dim)}
+h1{font-family:"Barlow Condensed",sans-serif;font-weight:600;font-size:clamp(36px,6.5vw,60px);line-height:.98;text-transform:uppercase;margin:10px 0 12px}
+h1 em{font-style:normal;color:var(--brass)}
+.lede{color:var(--mute);max-width:64ch}
+h2{font-family:"Barlow Condensed",sans-serif;font-weight:600;font-size:32px;text-transform:uppercase;letter-spacing:.04em;margin:0 0 4px}
+.sechead{border-top:1px solid var(--line);padding-top:26px;margin-top:52px}
+.secnote{color:var(--dim);font-size:13.5px;margin-bottom:22px;max-width:72ch}
+h3{font-family:"Barlow Condensed",sans-serif;font-weight:600;font-size:21px;text-transform:uppercase;letter-spacing:.03em;margin:26px 0 8px}
+p{margin-bottom:13px;max-width:74ch}
+.fig{background:var(--panel);border:1px solid var(--line);padding:18px 18px 12px;margin:18px 0 22px}
+.fig figcaption{font-family:"IBM Plex Mono",monospace;font-size:11.5px;color:var(--dim);margin-top:10px}
+svg{display:block;width:100%;height:auto}
+.tl{font-family:"IBM Plex Mono",monospace;font-size:11px;fill:var(--mute)}
+.tb{font-family:"IBM Plex Sans",sans-serif;font-size:12.5px;font-weight:500;fill:var(--ink)}
+.tn{font-family:"IBM Plex Mono",monospace;font-size:11px;fill:var(--dim)}
+.q{background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--brass);padding:15px 17px;margin:16px 0}
+.q .say{font-size:15.5px;color:#F0F6FA;margin-bottom:9px}
+.q .why{font-size:13.5px;color:var(--mute)}
+.q.kill{border-left-color:var(--sea)}
+.bad{background:var(--panel2);border:1px solid var(--line);border-left:3px solid var(--warn);padding:14px 16px;margin:14px 0}
+.bad .lbl{font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--warn);margin-bottom:6px}
+.bad .old{color:var(--dim);font-style:italic;margin-bottom:8px;font-size:14px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:13px}
+.card{background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--c,var(--sea))}
+.card .hd{display:flex;gap:9px;padding:11px 14px 0;align-items:center}
+.pid{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.1em;color:var(--c,var(--sea))}
+.ptag{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--dim)}
+button{font:inherit;cursor:pointer;border:none;background:none;color:inherit;text-align:left}
+.qbtn{padding:7px 14px 13px;width:100%;font-size:14.5px;line-height:1.5}
+.qbtn::after{content:"tap";display:block;font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--dim);margin-top:9px}
+.card.open .qbtn::after{content:"hide"}
+.ans{display:none;padding:13px 14px 15px;border-top:1px dashed var(--line2);background:var(--panel2);font-size:14px;color:#C3D5DF}
+.card.open .ans{display:block}
+.ans b{color:var(--c,var(--sea));font-weight:500}
+ul{margin:0 0 14px 20px;max-width:74ch}li{margin-bottom:7px}
+.eqbox{background:var(--panel2);border-left:2px solid var(--sea);padding:12px 15px;font-family:"IBM Plex Mono",monospace;font-size:13px;color:#C3D5DF;margin:14px 0;white-space:pre-wrap;overflow-x:auto}
+footer{margin-top:56px;border-top:1px solid var(--line);padding-top:18px;color:var(--dim);font-size:12.5px}
+@media (max-width:600px){.grid{grid-template-columns:1fr}h1{font-size:34px}}
+</style>
+
+<div class="wrap">
+<header class="top">
+<div class="eyebrow">Conversation prep &middot; Will Cahill, Ocean Atomics</div>
+<h1>He is not a<br><em>nuclear engineer</em></h1>
+<p class="lede">Public sources describe William Cahill as a co-founder and president of Applied Maritime Sciences, a maritime technology and strategy consultancy. He spent twenty years as a Coast Guard officer &mdash; cutterman and search-and-rescue helicopter pilot &mdash; then served as Director for Strategic Planning on the National Security Council and Maritime Advisor on the Council of Economic Advisers, working on American maritime competitiveness. His degrees are in naval architecture and marine engineering from the Coast Guard Academy, plus a Princeton MPP.</p>
+</header>
+
+<div class="sechead">
+<h2>01 &middot; Why that changes everything</h2>
+<p class="secnote">Three of your four drafted questions are aimed at the wrong person. That is fixable and worth ten minutes.</p>
+</div>
+
+<p>Ocean Atomics has a nuclear technologist on the team &mdash; the site describes someone with a Michigan nuclear PhD and fifteen years at TerraPower. Reactor physics questions belong to that person. <strong>Cahill's domain is the thing that has actually killed every previous civilian nuclear ship: regulation, liability, port access, crewing, and shipping economics.</strong> He has worked the Coast Guard side from inside the Coast Guard and the policy side from inside the White House. That is an unusual and specific expertise, and asking him about coolant chemistry wastes it.</p>
+
+<div class="bad">
+<div class="lbl">Rewrite &mdash; question 1</div>
+<div class="old">"Given your broad expertise in nuclear engineering... why does the fusion industry avoid marketing itself as nuclear?"</div>
+The premise is wrong and he will notice. Also, the fusion-marketing question is interesting but it is a dinner-party question, not a question for the CEO of a maritime nuclear company. Spend the slot better. If you want to raise fusion at all, raise it as your own background in one clause and move on.
+</div>
+
+<div class="bad">
+<div class="lbl">Rewrite &mdash; question 3</div>
+<div class="old">"As someone who has studied and catalogued so many concepts, what is your all-time favourite reactor design?"</div>
+This is aimed at the reactor cataloguer on the team, not at Cahill. Asked of him it reads as if you have not looked him up. The equivalent question <em>for him</em> is about ships, not reactors &mdash; see the "favourite" question below, which keeps the warmth and lands on his actual expertise.
+</div>
+
+<div class="bad">
+<div class="lbl">Rewrite &mdash; question 4</div>
+<div class="old">"What are the trade-offs of water versus liquid metal coolant?"</div>
+Keep the instinct, change the frame. He will not answer this as a thermal-hydraulicist; he will answer it as someone choosing a <em>licensable</em> technology. Ask why water-cooled was the right call <strong>for regulatory and crewing reasons</strong>, and you get a far better answer plus a natural opening for your Zap experience.
+</div>
+
+<p>Question 2 &mdash; why maritime and nuclear go together &mdash; is well aimed. Keep it.</p>
+
+<div class="sechead">
+<h2>02 &middot; The regulatory stack he lives in</h2>
+<p class="secnote">Hold this in your head and you can follow anything he says.</p>
+</div>
+
+<figure class="fig">
+<svg viewBox="0 0 700 320" role="img" aria-label="Layered diagram of the authorities governing a civilian nuclear ship, from international conventions down to port state entry">
+<rect x="60" y="40" width="580" height="38" rx="4" fill="#1A2B3A" stroke="#B189F2"/>
+<text class="tb" x="80" y="64">IMO &mdash; SOLAS Ch. VIII, Code of Safety for Nuclear Merchant Ships (1981)</text>
+<rect x="60" y="88" width="580" height="38" rx="4" fill="#1A2B3A" stroke="#B189F2"/>
+<text class="tb" x="80" y="112">Liability regime &mdash; the 1962 Brussels convention never entered into force</text>
+<rect x="60" y="136" width="280" height="38" rx="4" fill="#122A32" stroke="#3FBFC8"/>
+<text class="tb" x="80" y="160">NRC &mdash; the reactor</text>
+<rect x="360" y="136" width="280" height="38" rx="4" fill="#122A32" stroke="#3FBFC8"/>
+<text class="tb" x="380" y="160">USCG &mdash; the vessel and the crew</text>
+<rect x="60" y="184" width="580" height="38" rx="4" fill="#122A32" stroke="#3FBFC8"/>
+<text class="tb" x="80" y="208">Flag state &mdash; whose rules the ship sails under</text>
+<rect x="60" y="232" width="580" height="38" rx="4" fill="#2B1E2A" stroke="#EE7095" stroke-width="1.6"/>
+<text class="tb" x="80" y="256" fill="#EE7095">Port state &mdash; can simply refuse entry, and historically has</text>
+<text class="tn" x="350" y="296" text-anchor="middle">Every layer above can say yes and the bottom layer still decides whether the ship earns money</text>
+</svg>
+<figcaption>Fig 1 &mdash; The binding constraint is at the bottom. A licensed ship that no port will accept is a stranded asset.</figcaption>
+</figure>
+
+<p>Classification societies sit alongside this &mdash; ABS, DNV, Lloyd's &mdash; and the Approval in Principle process is how concepts currently get validated. ABS granted an AIP in July 2026 to a Korean 15,000 TEU container ship design using two marine molten salt reactors, which tells you the competitive landscape is moving.</p>
+
+<h3>What just happened, three days before your chat</h3>
+<p>The IAEA launched its <strong>ATLAS</strong> initiative &mdash; Atomic Technologies Licensed for Applications at Sea &mdash; in Washington on 26&ndash;27 August 2026, with a US industry day on the 25th. It is explicitly aimed at clearing regulatory barriers for civilian reactors on ships and floating platforms. Given his background and their location, there is a strong chance he was in the room. <strong>Ask about it.</strong> It is current, it is his lane, and it signals you follow the industry rather than just the company.</p>
+
+<div class="sechead">
+<h2>03 &middot; The history that explains the company</h2>
+<p class="secnote">Four civilian nuclear ships have sailed. Knowing why they stopped is the best possible grounding for this conversation.</p>
+</div>
+
+<figure class="fig">
+<svg viewBox="0 0 700 270" role="img" aria-label="Timeline of civilian nuclear merchant ships showing NS Savannah, Otto Hahn, Mutsu and Sevmorput and why each ended">
+<line x1="70" y1="200" x2="660" y2="200" stroke="#27475C" stroke-width="1.5"/>
+<text class="tn" x="70" y="224">1960</text><text class="tn" x="250" y="224">1975</text><text class="tn" x="430" y="224">1990</text><text class="tn" x="612" y="224">today</text>
+<line x1="96" y1="200" x2="216" y2="200" stroke="#E0A94A" stroke-width="6"/>
+<text class="tb" x="96" y="72">NS Savannah &middot; US &middot; 1962&ndash;72</text>
+<text class="tn" x="96" y="90">uneconomic; special port arrangements</text>
+<line x1="150" y1="96" x2="150" y2="194" stroke="#27475C" stroke-dasharray="3 3"/>
+<line x1="168" y1="200" x2="300" y2="200" stroke="#E0A94A" stroke-width="6"/>
+<text class="tb" x="300" y="118">Otto Hahn &middot; DE &middot; 1968&ndash;79</text>
+<text class="tn" x="300" y="136">converted to diesel; port access</text>
+<line x1="290" y1="142" x2="250" y2="194" stroke="#27475C" stroke-dasharray="3 3"/>
+<line x1="230" y1="200" x2="250" y2="200" stroke="#EE7095" stroke-width="6"/>
+<text class="tb" x="80" y="164">Mutsu &middot; JP</text>
+<text class="tn" x="80" y="182">leak on first criticality; never carried cargo</text>
+<line x1="240" y1="200" x2="240" y2="188" stroke="#EE7095"/>
+<line x1="404" y1="200" x2="640" y2="200" stroke="#7FCB6A" stroke-width="6"/>
+<text class="tb" x="404" y="252">Sevmorput &amp; the Russian icebreakers &mdash; the only sustained programme</text>
+<text class="tn" x="70" y="40">Every Western failure was economic and political. None was a reactor failure.</text>
+</svg>
+<figcaption>Fig 2 &mdash; Approximate service periods. The pattern matters more than the dates.</figcaption>
+</figure>
+
+<p>That pattern is the entire thesis of a company like Ocean Atomics. The technology worked. What failed was economics, port acceptance and the absence of a liability framework. Russia sustained a fleet because Arctic icebreaking had no alternative and the state absorbed the cost. <strong>So the interesting question is what has changed &mdash; decarbonisation pressure, fuel cost, SMR standardisation, or the regulatory push ATLAS represents.</strong> That is the question he will most want to answer.</p>
+
+<div class="sechead">
+<h2>04 &middot; Your questions, rebuilt</h2>
+<p class="secnote">Pick four. Lead with the one that fits the moment.</p>
+</div>
+
+<div class="q">
+<div class="say">"Every civilian nuclear ship before this failed on economics and port access rather than on the reactor. What's actually different now &mdash; is it decarbonisation pressure, SMR standardisation, or the regulatory work like ATLAS?"</div>
+<div class="why">The best opener you have. It shows you know the history, it is genuinely his question, and it invites the story he most wants to tell.</div>
+</div>
+
+<div class="q">
+<div class="say">"ATLAS launched in Washington last week. Were you there, and did it change your read on the timeline?"</div>
+<div class="why">Current, specific, and low-risk. If he was there you get the inside version; if not, you still get his assessment.</div>
+</div>
+
+<div class="q">
+<div class="say">"You've worked the Coast Guard side from inside and the policy side from the NSC. Where does the real bottleneck sit &mdash; NRC licensing of the plant, Coast Guard acceptance of the vessel and crew, or port states deciding whether to let it dock?"</div>
+<div class="why">This is the question only he can answer, and the three-way framing shows you understand the stack. Expect a long answer.</div>
+</div>
+
+<div class="q">
+<div class="say">"What's the appeal of putting the reactor on a ship rather than on land &mdash; is it manufacturing repeatability, unlimited cooling water, or getting around siting and permitting?"</div>
+<div class="why">Your question 2, essentially unchanged. It works.</div>
+</div>
+
+<div class="q">
+<div class="say">"You've gone water-cooled while some competitors are pursuing molten salt. From where you sit, how much of that was a licensability and crew-training decision rather than a thermal one?"</div>
+<div class="why">Your question 4, re-aimed. This gives him a strategy question instead of a physics question, and it opens the door for you to mention Zap in his terms rather than yours.</div>
+</div>
+
+<div class="q">
+<div class="say">"Training or creating licensed operators is unusual for a reactor company to take on. Is the crewing pipeline as hard as the licensing?"</div>
+<div class="why">Their own materials say they will train operators. It is a real commitment and almost nobody asks about it. Merchant marine crewing is squarely his world.</div>
+</div>
+
+<div class="q">
+<div class="say">"What's your favourite ship &mdash; the one you always want to talk about?"</div>
+<div class="why">Your question 3, redirected from reactors to vessels. Same warmth, right target. Twenty years at sea and a naval architecture degree; he has an answer.</div>
+</div>
+
+<div class="sechead">
+<h2>05 &middot; The one technical question only you can ask</h2>
+<p class="secnote">Save this for when the conversation is going well. It is the strongest thing you own.</p>
+</div>
+
+<div class="q kill">
+<div class="say">"A ship is a time-varying gravity vector. Natural circulation and passive safety systems are driven by &rho;g&Delta;h, and heave changes g by ten percent or more at a fraction of a hertz. My background is two-phase flow and critical heat flux experiments &mdash; how much does ship motion actually shape the thermal-hydraulic design?"</div>
+<div class="why">Nobody else asks this. It comes straight from your UIUC and UCSD work, it is a real open problem in marine reactor design, and even if he hands it to the nuclear lead, he will remember that you asked it.</div>
+</div>
+
+<figure class="fig">
+<svg viewBox="0 0 700 260" role="img" aria-label="Ship heave modulates the effective gravity acting on a natural circulation loop, varying the driving head over time">
+<path d="M40 96 Q140 74 240 96 T440 96 T640 96" fill="none" stroke="#3FBFC8" stroke-width="2"/>
+<text class="tn" x="40" y="76" fill="#3FBFC8">heave &plusmn;2 m at 8 s</text>
+<text class="tn" x="40" y="140">a = A&omega;&sup2; = 2 &times; (2&pi;/8)&sup2; &asymp; 1.2 m/s&sup2;</text>
+<text class="tb" x="40" y="170">effective g swings roughly &plusmn;12% at 0.125 Hz</text>
+<line x1="40" y1="188" x2="660" y2="188" stroke="#1B3140"/>
+<text class="tb" x="40" y="214">driving head for natural circulation &prop; &rho; g &Delta;h</text>
+<text class="tn" x="40" y="238">so the passive safety path is being modulated at wave frequency &mdash; and roll tilts the buoyancy vector as well</text>
+</svg>
+<figcaption>Fig 3 &mdash; Land reactors get a constant g. Marine reactors do not.</figcaption>
+</figure>
+
+<div class="sechead">
+<h2>06 &middot; Context primers</h2>
+<p class="secnote">Tap any of these if the term is fuzzy. You do not need to raise them; you need to not be lost if he does.</p>
+</div>
+<div class="grid" id="grid"></div>
+
+<div class="sechead">
+<h2>07 &middot; Your bridges</h2>
+</div>
+<ul>
+<li><strong>You already work in marine energy.</strong> A DOE ORISE fellow with the Water Power Technologies Office, doing field-deployable ocean power systems. That is the single most relevant line on your r&eacute;sum&eacute; for this company and it is current. Lead with it.</li>
+<li><strong>Your boiling work is reactor thermal hydraulics.</strong> Departure from nucleate boiling is <em>the</em> limiting phenomenon in a pressurised water reactor &mdash; DNBR is the core safety margin. You ran CHF experiments and studied how surface geometry changes nucleation. Say it plainly: <em>"my experimental background is critical heat flux, which I understand is the same limit that sets DNBR."</em></li>
+<li><strong>Fouling and seawater.</strong> Your falling-film desalination work was literally seawater scaling on heat transfer surfaces. Any marine plant has a seawater-cooled condenser with exactly that problem.</li>
+<li><strong>Zap.</strong> Mention it as nuclear-adjacent materials and liquid metal loop work, briefly, and let him ask. Do not oversell fusion at a fission company.</li>
+<li><strong>The MarineSitu line you drafted is good.</strong> "Characterised the power system from field data, built the forecasting and optimisation, validated both against telemetry, and defined what a live deployment loop would look like &mdash; setting my own roadmap and coordinating hardware specs along the way." Tighten to: characterised, modelled, validated, and scoped the deployment. The <em>self-directed</em> part is the part that matters to a CEO.</li>
+</ul>
+
+<div class="sechead">
+<h2>08 &middot; Do not do these</h2>
+</div>
+<ul>
+<li>Do not call him a nuclear engineer or imply he catalogues reactors. Both are someone else on his team.</li>
+<li>Do not lead with fusion. At a fission company it can read as tourism. One clause, in passing, only if it is relevant to the answer.</li>
+<li>Do not litigate nuclear public opinion or bring up accidents unprompted. He has heard it and it burns a slot.</li>
+<li>Do not ask anything answerable from their homepage.</li>
+<li>Do not ask for a job in the first ten minutes. If it goes well, close with <em>"who else should I be talking to?"</em> &mdash; which is a better ask anyway.</li>
+</ul>
+
+<div class="sechead">
+<h2>09 &middot; Cheat card</h2>
+</div>
+<div class="eqbox">HIM: 20 yrs Coast Guard (cutterman, SAR pilot) &rarr; NSC strategic planning
+     &rarr; CEA maritime advisor. Naval arch + marine eng, USCGA. Princeton MPP.
+     NOT a nuclear engineer.
+
+THEM: Bethesda. Standardised water-cooled plant, repeated across vessel types.
+      Nuclear-ready vessel standards. Own lifecycle dockyard. Train their own
+      licensed operators. ~28 roles open Aug 2026.
+
+NOW:  IAEA ATLAS launched Washington 26-27 Aug 2026. ABS gave AIP to a Korean
+      15,000 TEU molten-salt design in July.
+
+THEN: Savannah, Otto Hahn, Mutsu all died on economics and port access.
+      Russia sustained a fleet because icebreaking had no alternative.
+
+OPEN WITH: what has actually changed since Savannah?
+CLOSE WITH: who else should I be talking to?</div>
+
+<footer>
+Assembled from public sources in August 2026, including the Ocean Atomics site, FPRI's contributor biography of William Cahill, and reporting on the IAEA ATLAS launch. The identification of Cahill's background is a strong match but is inferred from a separate biography &mdash; confirm it early and lightly rather than assuming it aloud. Historical ship details are widely reported but worth a second check before you quote a date.
+</footer>
+</div>
+
+<script>
+var C={reg:"var(--pol)",tech:"var(--sea)",hist:"var(--brass)",biz:"var(--go)"};
+var Q=[
+{c:"reg",t:"Liability",q:"What is Price-Anderson, and why doesn't it solve this?",a:"US law channelling nuclear liability and providing a pooled insurance layer for <b>domestic land-based facilities</b>. A ship trading internationally sits outside it. The instrument meant to cover ships &mdash; the 1962 Brussels Convention on the Liability of Operators of Nuclear Ships &mdash; never entered into force. That gap is a live commercial obstacle, not a technicality."},
+{c:"reg",t:"Regulators",q:"What does the Coast Guard actually control here?",a:"Vessel safety and inspection, certification of the ship, and <b>licensing of the crew</b>. The NRC regulates the reactor; the Coast Guard regulates the thing it is bolted into and the people operating it. Cahill worked twenty years inside that authority, which is precisely why the split is the right thing to ask him about."},
+{c:"reg",t:"Regulators",q:"What is a port state and why does it dominate?",a:"The country whose harbour you want to enter. It can refuse a nuclear vessel regardless of flag state approval or NRC licence. <b>Historically this is what stranded the civilian ships</b> &mdash; approvals existed, harbours said no. A ship that cannot dock earns nothing."},
+{c:"reg",t:"Regulators",q:"What is ATLAS?",a:"The IAEA's <b>Atomic Technologies Licensed for Applications at Sea</b> initiative, launched in Washington 26&ndash;27 August 2026 with a US industry day preceding it. Its purpose is clearing regulatory barriers for civilian reactors on ships and floating platforms. Timely, and squarely in his lane."},
+{c:"reg",t:"Class",q:"What is an Approval in Principle?",a:"A classification society &mdash; ABS, DNV, Lloyd's &mdash; reviewing a concept design and confirming it has no fundamental barriers to eventual class approval. Not a licence, but the <b>currency of credibility</b> in shipping. ABS granted one in July 2026 to a Korean 15,000 TEU container ship with two marine molten salt reactors."},
+{c:"hist",t:"History",q:"What happened to NS Savannah?",a:"US demonstration ship, operational 1962&ndash;72. Technically successful, commercially not: cargo capacity was sacrificed to the plant, crew costs were high, and port arrangements had to be negotiated individually. <b>It was retired for economics, not safety.</b> She survives as a museum ship."},
+{c:"hist",t:"History",q:"Otto Hahn and Mutsu?",a:"<b>Otto Hahn</b> (Germany, 1968&ndash;79) ran successfully as an ore carrier and research ship, then was converted to diesel &mdash; port restrictions and cost. <b>Mutsu</b> (Japan) suffered a radiation leak during first criticality trials in 1974, faced sustained local opposition, never carried commercial cargo, and was decommissioned in 1992."},
+{c:"hist",t:"History",q:"Why did Russia succeed where others didn't?",a:"Arctic icebreaking has <b>no non-nuclear alternative</b> at the required endurance, and the state absorbed the economics. The Lenin, the Arktika class and now Project 22220 with RITM-200 reactors, plus the cargo ship Sevmorput. The lesson: nuclear at sea works where the mission genuinely has no substitute."},
+{c:"tech",t:"Reactor",q:"What is DNB and why should you mention it?",a:"Departure from nucleate boiling &mdash; the point where the boiling regime transitions and the wall temperature runs away. In a pressurised water reactor the core safety margin is expressed as <b>DNBR</b>, the ratio to that limit. It is the same phenomenon you characterised experimentally as CHF. That equivalence is your strongest technical bridge to this company."},
+{c:"tech",t:"Reactor",q:"Why water-cooled rather than molten salt?",a:"Licensability. Water reactors have decades of naval and civil operating history, a regulator that knows how to review them, established fuel supply, and a crew training pipeline that already exists. Molten salt promises better thermodynamics and low pressure but asks a regulator to review something new. <b>For a company whose bottleneck is licensing, that is the whole argument.</b>"},
+{c:"tech",t:"Naval arch",q:"Where does a reactor go in a hull, and why?",a:"Amidships and low. Low keeps the centre of gravity down, which matters because shielding is heavy and stability is a hard constraint. Amidships minimises the <b>bending moment</b> the plant sees as the hull flexes in a seaway, and buys the most distance from a side impact. Crew accommodation moves away from it."},
+{c:"tech",t:"Naval arch",q:"What does ship motion do to a reactor plant?",a:"Roll tilts the effective gravity vector; heave modulates its magnitude. Anything driven by <b>&rho;g&Delta;h</b> &mdash; natural circulation, passive decay heat removal, steam separation, pressuriser level &mdash; is being shaken at wave frequency. Two-phase flow regimes shift as well. This is a real design area and it is where your background is unusually relevant."},
+{c:"biz",t:"Business",q:"Why standardise one plant across vessel types?",a:"Nuclear cost is dominated by first-of-a-kind engineering and licensing. Repeating a <b>single certified design</b> amortises that across many hulls and turns a bespoke project into a product. It is the same logic behind SMRs generally, applied to ships &mdash; and it explains why they also define a nuclear-ready vessel standard, so the hull is designed to accept the plant rather than the reverse."},
+{c:"biz",t:"Business",q:"Why does a reactor company build a dockyard?",a:"Because refuelling, maintenance and decommissioning need a facility that is licensed to handle nuclear material, and none currently exists for civilian ships. Owning the lifecycle removes a dependency they otherwise cannot control. It also creates a recurring revenue line, which is the part an investor cares about."},
+{c:"biz",t:"Business",q:"Why is shipping decarbonisation the driver?",a:"Shipping is a large and hard-to-abate emissions source with tightening IMO carbon rules, and the alternatives &mdash; ammonia, methanol, LNG &mdash; all carry fuel cost, bunkering infrastructure and energy density penalties. Nuclear offers <b>very high energy density and long refuelling intervals</b>, which suits long-haul, high-speed operation. That is the commercial thesis."}
+];
+document.getElementById("grid").innerHTML=Q.map(function(p,i){
+ return '<article class="card" style="--c:'+C[p.c]+'"><div class="hd"><span class="pid">'+String(i+1).padStart(2,"0")+'</span><span class="ptag">'+p.t+'</span></div><button class="qbtn">'+p.q+'</button><div class="ans">'+p.a+'</div></article>';
+}).join("");
+document.addEventListener("click",function(e){var b=e.target.closest(".qbtn");if(b)b.closest(".card").classList.toggle("open");});
+</script>
