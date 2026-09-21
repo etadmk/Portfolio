@@ -1,0 +1,648 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><style>:root{color-scheme:light}body{margin:0}img{max-width:100%}</style></head><body>
+<title>Duty Cycle Planner</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+  :root{
+    --paper:#eef1f4;
+    --card:#ffffff;
+    --sunk:#f6f8fa;
+    --line:#d6dce3;
+    --line-soft:#e6eaef;
+    --ink:#15202b;
+    --ink-soft:#4e5b68;
+    --ink-faint:#8894a2;
+    --ocean:#0e4a63;
+    --ocean-soft:#e3edf3;
+    --good:#16794f;
+    --good-soft:#e2f2ea;
+    --warn:#9a6212;
+    --warn-soft:#fbf0dd;
+    --bad:#b3342a;
+    --bad-soft:#fbeae8;
+    --p1:#0e4a63;
+    --p2:#c9552b;
+    --p3:#4a7c59;
+    --p4:#6a4fb0;
+    --p5:#8a6d3b;
+  }
+  *{ box-sizing:border-box; }
+  body{
+    margin:0; background:var(--paper); color:var(--ink);
+    font-family:"IBM Plex Sans", system-ui, sans-serif; font-size:15px; line-height:1.5;
+  }
+  .mono{ font-family:"IBM Plex Mono", monospace; font-variant-numeric:tabular-nums; }
+  main{ max-width:1120px; margin:0 auto; padding:0 20px 90px; }
+
+  header.top{ padding:44px 0 26px; }
+  header.top .eyebrow{
+    font-family:"IBM Plex Mono",monospace; font-size:11px; letter-spacing:0.13em;
+    text-transform:uppercase; color:var(--ocean); margin-bottom:9px;
+  }
+  header.top h1{ font-size:clamp(28px,4.4vw,40px); font-weight:700; letter-spacing:-0.022em; margin:0 0 10px; }
+  header.top p{ font-size:16.5px; color:var(--ink-soft); max-width:66ch; margin:0; line-height:1.55; }
+
+  .grid{ display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1.15fr); gap:18px; align-items:start; }
+  @media (max-width:900px){ .grid{ grid-template-columns:1fr; } }
+
+  .card{ background:var(--card); border:1px solid var(--line); border-radius:12px; padding:20px 22px; margin-bottom:18px; }
+  .card > h2{
+    font-size:12px; font-weight:600; letter-spacing:0.09em; text-transform:uppercase;
+    color:var(--ocean); margin:0 0 4px; font-family:"IBM Plex Mono",monospace;
+  }
+  .card > p.hint{ font-size:13.5px; color:var(--ink-faint); margin:0 0 15px; line-height:1.5; }
+
+  .field{ display:flex; align-items:center; gap:10px; margin-bottom:11px; }
+  .field label{ flex:1; font-size:14px; color:var(--ink-soft); }
+  .field .unit{ font-family:"IBM Plex Mono",monospace; font-size:11.5px; color:var(--ink-faint); width:30px; }
+  input[type="number"]{
+    width:92px; font-family:"IBM Plex Mono",monospace; font-variant-numeric:tabular-nums;
+    font-size:14px; padding:6px 9px; border:1px solid var(--line); border-radius:7px;
+    background:var(--sunk); color:var(--ink); text-align:right;
+  }
+  input[type="number"]:focus-visible, input[type="text"]:focus-visible, button:focus-visible{
+    outline:2px solid var(--ocean); outline-offset:1px;
+  }
+  input[type="text"]{
+    font-size:14px; padding:6px 9px; border:1px solid var(--line); border-radius:7px;
+    background:var(--sunk); color:var(--ink); width:100%;
+  }
+
+  .sites{ display:flex; flex-wrap:wrap; gap:6px; margin:4px 0 16px; }
+  .sites button{
+    font-family:"IBM Plex Mono",monospace; font-size:11.5px; padding:5px 10px;
+    border:1px solid var(--line); border-radius:20px; background:var(--sunk);
+    color:var(--ink-soft); cursor:pointer;
+  }
+  .sites button:hover{ border-color:var(--ocean); color:var(--ocean); }
+  .sites button.on{ background:var(--ocean); border-color:var(--ocean); color:#fff; }
+
+  table.pay{ width:100%; border-collapse:collapse; }
+  table.pay th{
+    text-align:left; font-family:"IBM Plex Mono",monospace; font-size:10px; letter-spacing:0.07em;
+    text-transform:uppercase; color:var(--ink-faint); font-weight:500; padding:0 6px 7px; border-bottom:1px solid var(--line-soft);
+  }
+  table.pay th.r, table.pay td.r{ text-align:right; }
+  table.pay td{ padding:7px 6px; border-bottom:1px solid var(--line-soft); vertical-align:middle; }
+  table.pay tr.off td{ opacity:0.42; }
+  .swatch{ width:9px; height:9px; border-radius:2px; display:inline-block; margin-right:7px; vertical-align:middle; }
+  .pname{ font-size:14px; font-weight:500; border:none; background:transparent; padding:2px 3px; width:100%;
+    color:var(--ink); font-family:"IBM Plex Sans",sans-serif; border-radius:4px; }
+  .pname:hover{ background:var(--sunk); }
+  .pwatt{ width:70px; }
+  .arrows{ display:flex; flex-direction:column; gap:1px; }
+  .arrows button, .rm{
+    font-family:"IBM Plex Mono",monospace; font-size:10px; line-height:1.15; padding:1px 5px;
+    border:1px solid var(--line); background:var(--card); border-radius:4px; cursor:pointer; color:var(--ink-soft);
+  }
+  .arrows button:disabled{ opacity:0.28; cursor:default; }
+  .rm{ font-size:12px; padding:3px 8px; }
+  .rm:hover{ border-color:var(--bad); color:var(--bad); }
+  .addrow{ margin-top:12px; }
+  .addrow button{
+    font-size:13px; font-weight:500; padding:7px 14px; border:1px dashed var(--line);
+    background:var(--sunk); border-radius:8px; cursor:pointer; color:var(--ink-soft);
+  }
+  .addrow button:hover{ border-color:var(--ocean); color:var(--ocean); }
+  .duty{ font-family:"IBM Plex Mono",monospace; font-variant-numeric:tabular-nums; font-size:13px; font-weight:600; color:var(--ocean); white-space:nowrap; }
+
+  .stats{ display:grid; grid-template-columns:repeat(auto-fit,minmax(118px,1fr)); gap:1px; background:var(--line-soft);
+    border:1px solid var(--line-soft); border-radius:10px; overflow:hidden; margin-bottom:16px; }
+  .stat{ background:var(--card); padding:12px 14px; }
+  .stat .k{ font-family:"IBM Plex Mono",monospace; font-size:10px; letter-spacing:0.07em; text-transform:uppercase; color:var(--ink-faint); margin-bottom:5px; }
+  .stat .v{ font-family:"IBM Plex Mono",monospace; font-variant-numeric:tabular-nums; font-size:20px; font-weight:600; letter-spacing:-0.01em; }
+  .stat .v small{ font-size:12px; font-weight:400; color:var(--ink-faint); margin-left:2px; }
+
+  .verdict{ border-radius:10px; padding:14px 17px; margin-bottom:16px; border:1px solid transparent; }
+  .verdict .vh{ display:flex; align-items:center; gap:9px; font-weight:600; font-size:15.5px; margin-bottom:5px; }
+  .verdict p{ margin:0; font-size:14px; line-height:1.55; }
+  .verdict.ok{ background:var(--good-soft); border-color:#b9ddcb; color:#0f4c33; }
+  .verdict.ok .vh{ color:var(--good); }
+  .verdict.cut{ background:var(--warn-soft); border-color:#e8d2a6; color:#5e3f0c; }
+  .verdict.cut .vh{ color:var(--warn); }
+  .verdict.bad{ background:var(--bad-soft); border-color:#eec3bd; color:#73201a; }
+  .verdict.bad .vh{ color:var(--bad); }
+  .dot{ width:9px; height:9px; border-radius:50%; background:currentColor; flex:none; }
+
+  figure{ margin:0 0 16px; }
+  figure svg{ width:100%; height:auto; display:block; }
+  figcaption{ font-size:12.5px; color:var(--ink-faint); margin-top:7px; line-height:1.5; }
+
+  .legend{ display:flex; flex-wrap:wrap; gap:12px; margin-top:8px; font-size:12.5px; color:var(--ink-soft); }
+  .legend span{ display:flex; align-items:center; gap:6px; }
+
+  footer.note{ margin-top:8px; font-size:13px; color:var(--ink-faint); line-height:1.6; }
+  footer.note b{ color:var(--ink-soft); font-weight:600; }
+  footer.note code{ font-family:"IBM Plex Mono",monospace; font-size:12px; background:var(--sunk);
+    padding:1px 5px; border-radius:4px; border:1px solid var(--line-soft); }
+</style>
+
+<main>
+  <header class="top">
+    <div class="eyebrow">Off-grid marine deployments</div>
+    <h1>Duty Cycle Planner</h1>
+    <p>
+      Give it a site, a battery and a list of instruments in priority order. It allocates the power, simulates
+      the battery forward hour by hour, and refuses any schedule that would cross the safety floor. Defaults are
+      the measured IMTA buoy.
+    </p>
+  </header>
+
+  <div class="grid">
+    <!-- ======================= INPUTS ======================= -->
+    <div>
+      <div class="card">
+        <h2>1 &middot; Site and panel</h2>
+        <p class="hint">Peak sun hours already fold in latitude, season and typical cloud. Pick a site or type your own.</p>
+        <div class="sites" id="sites"></div>
+        <div class="field">
+          <label for="panel">Panel rating</label>
+          <input type="number" id="panel" value="100" min="0" step="5">
+          <span class="unit">W</span>
+        </div>
+        <div class="field">
+          <label for="sun">Peak sun hours</label>
+          <input type="number" id="sun" value="5.5" min="0" max="12" step="0.1">
+          <span class="unit">h</span>
+        </div>
+        <div class="field">
+          <label for="derate">System derate</label>
+          <input type="number" id="derate" value="0.85" min="0.3" max="1" step="0.01">
+          <span class="unit"></span>
+        </div>
+        <div class="field">
+          <label for="err">Forecast uncertainty, plus or minus</label>
+          <input type="number" id="err" value="0.93" min="0" step="0.1">
+          <span class="unit">W</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>2 &middot; Battery</h2>
+        <p class="hint">The floor is a fraction of usable capacity. Below it you start damaging the chemistry.</p>
+        <div class="field">
+          <label for="cap">Capacity</label>
+          <input type="number" id="cap" value="1200" min="1" step="50">
+          <span class="unit">Wh</span>
+        </div>
+        <div class="field">
+          <label for="soc">Starting charge</label>
+          <input type="number" id="soc" value="600" min="0" step="10">
+          <span class="unit">Wh</span>
+        </div>
+        <div class="field">
+          <label for="floor">Safety floor</label>
+          <input type="number" id="floor" value="20" min="0" max="90" step="1">
+          <span class="unit">%</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>3 &middot; Instruments, in priority order</h2>
+        <p class="hint">The one at the top is paid first. Whatever is left cascades down. Uncheck to leave something off this deployment.</p>
+        <table class="pay">
+          <thead>
+            <tr>
+              <th style="width:38px;"></th><th style="width:22px;"></th>
+              <th>Instrument</th><th class="r" style="width:86px;">Draw</th>
+              <th class="r" style="width:104px;">Duty</th><th style="width:34px;"></th>
+            </tr>
+          </thead>
+          <tbody id="rows"></tbody>
+        </table>
+        <div class="addrow"><button type="button" id="add">+ add an instrument</button></div>
+      </div>
+    </div>
+
+    <!-- ======================= OUTPUTS ======================= -->
+    <div>
+      <div class="card">
+        <h2>What the day looks like</h2>
+        <div class="stats">
+          <div class="stat"><div class="k">Harvest</div><div class="v" id="s-harvest">0<small>Wh</small></div></div>
+          <div class="stat"><div class="k">Average</div><div class="v" id="s-avg">0<small>W</small></div></div>
+          <div class="stat"><div class="k">Allocated</div><div class="v" id="s-alloc">0<small>W</small></div></div>
+          <div class="stat"><div class="k">Lowest charge</div><div class="v" id="s-min">0<small>Wh</small></div></div>
+        </div>
+
+        <div class="verdict ok" id="verdict">
+          <div class="vh"><span class="dot"></span><span id="v-title">Checking</span></div>
+          <p id="v-body">Working it out.</p>
+        </div>
+
+        <figure>
+          <svg id="soc-chart" viewBox="0 0 640 230" role="img" aria-label="Battery charge simulated hour by hour across one day, against the safety floor."></svg>
+          <figcaption>
+            Battery charge, hour by hour, starting at midnight.
+            <span class="legend">
+              <span><svg width="16" height="8" aria-hidden="true"><line x1="0" y1="4" x2="16" y2="4" stroke="var(--ocean)" stroke-width="2.5"/></svg> charge</span>
+              <span><svg width="16" height="8" aria-hidden="true"><line x1="0" y1="4" x2="16" y2="4" stroke="var(--bad)" stroke-width="2" stroke-dasharray="4 3"/></svg> safety floor</span>
+              <span><svg width="16" height="8" aria-hidden="true"><line x1="0" y1="4" x2="16" y2="4" stroke="var(--warn)" stroke-width="2" stroke-dasharray="2 2"/></svg> worst case</span>
+            </span>
+          </figcaption>
+        </figure>
+      </div>
+
+      <div class="card">
+        <h2>The schedule</h2>
+        <p class="hint">Every instrument runs on the same 24 hour day. Priority decides who gets power first, not who gets the clock first.</p>
+        <figure>
+          <svg id="gantt" viewBox="0 0 640 160" role="img" aria-label="Twenty four hour schedule, one row per instrument."></svg>
+        </figure>
+        <footer class="note" id="summary"></footer>
+      </div>
+
+      <div class="card">
+        <h2>Assumptions</h2>
+        <footer class="note">
+          <p style="margin:0 0 9px;">
+            <b>Harvest</b> is <code>panel &times; peak sun hours &times; derate</code>, spread across the day as a
+            single smooth solar curve rather than a flat block.
+          </p>
+          <p style="margin:0 0 9px;">
+            <b>Allocation</b> is a priority cascade. The first instrument takes what it needs, the next takes what
+            is left, and so on until the power runs out.
+          </p>
+          <p style="margin:0 0 9px;">
+            <b>The floor check</b> simulates charge forward as
+            <code>next = now + solar &minus; standby &minus; (duty &times; draw)</code>, then scales the
+            duty cycles down until the lowest point of the day clears the floor. That is the part that makes this
+            a scheduler rather than a calculator.
+          </p>
+          <p style="margin:0;">
+            <b>Worst case</b> reruns the same day with the forecast uncertainty subtracted from every hour of sun.
+            The default of 0.93 W is the verified LSTM error from the IMTA benchmark.
+          </p>
+        </footer>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script>
+(function(){
+  var COLORS = ['var(--p1)','var(--p2)','var(--p3)','var(--p4)','var(--p5)'];
+  var SITES = [
+    ['Hawaii', 6.2], ['Miami', 5.8], ['Gulf Coast', 5.5], ['San Diego', 5.5],
+    ['Boston', 4.2], ['Seattle', 3.5], ['Anchorage', 2.5]
+  ];
+
+  var payloads = [
+    { name:'Standby (particle board)', watt:1.7,  on:true },
+    { name:'Package (Jetson + cameras)', watt:33.7, on:true },
+    { name:'Sonar', watt:18,  on:false },
+    { name:'UV-C light', watt:6.6, on:false }
+  ];
+
+  var $ = function(id){ return document.getElementById(id); };
+  var rowsEl = $('rows');
+
+  // ---------- inputs ----------
+  function num(id, fallback){
+    var v = parseFloat($(id).value);
+    return isFinite(v) ? v : fallback;
+  }
+
+  function buildSites(){
+    var wrap = $('sites');
+    SITES.forEach(function(s){
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.textContent = s[0] + ' · ' + s[1] + 'h';
+      b.addEventListener('click', function(){
+        $('sun').value = s[1];
+        compute();
+      });
+      b.dataset.sun = s[1];
+      wrap.appendChild(b);
+    });
+  }
+
+  function markSite(){
+    var sun = num('sun', 0).toFixed(1);
+    Array.prototype.forEach.call($('sites').children, function(b){
+      b.classList.toggle('on', parseFloat(b.dataset.sun).toFixed(1) === sun);
+    });
+  }
+
+  // ---------- payload table ----------
+  function renderRows(){
+    rowsEl.innerHTML = '';
+    payloads.forEach(function(p, i){
+      var tr = document.createElement('tr');
+      if(!p.on) tr.className = 'off';
+
+      var tdA = document.createElement('td');
+      var arrows = document.createElement('div');
+      arrows.className = 'arrows';
+      var up = document.createElement('button');
+      up.type = 'button'; up.textContent = '↑'; up.disabled = (i === 0);
+      up.setAttribute('aria-label', 'Raise ' + p.name + ' priority');
+      up.addEventListener('click', function(){ swap(i, i - 1); });
+      var dn = document.createElement('button');
+      dn.type = 'button'; dn.textContent = '↓'; dn.disabled = (i === payloads.length - 1);
+      dn.setAttribute('aria-label', 'Lower ' + p.name + ' priority');
+      dn.addEventListener('click', function(){ swap(i, i + 1); });
+      arrows.appendChild(up); arrows.appendChild(dn);
+      tdA.appendChild(arrows); tr.appendChild(tdA);
+
+      var tdC = document.createElement('td');
+      var cb = document.createElement('input');
+      cb.type = 'checkbox'; cb.checked = p.on;
+      cb.setAttribute('aria-label', 'Include ' + p.name);
+      cb.addEventListener('change', function(){ p.on = cb.checked; renderRows(); compute(); });
+      tdC.appendChild(cb); tr.appendChild(tdC);
+
+      var tdN = document.createElement('td');
+      var sw = document.createElement('span');
+      sw.className = 'swatch';
+      sw.style.background = COLORS[i % COLORS.length];
+      var nm = document.createElement('input');
+      nm.type = 'text'; nm.className = 'pname'; nm.value = p.name;
+      nm.setAttribute('aria-label', 'Instrument name');
+      nm.addEventListener('input', function(){ p.name = nm.value; compute(); });
+      tdN.appendChild(sw); tdN.appendChild(nm);
+      tdN.style.display = 'flex'; tdN.style.alignItems = 'center';
+      tr.appendChild(tdN);
+
+      var tdW = document.createElement('td');
+      tdW.className = 'r';
+      var w = document.createElement('input');
+      w.type = 'number'; w.className = 'pwatt'; w.value = p.watt; w.step = '0.1'; w.min = '0';
+      w.setAttribute('aria-label', p.name + ' draw in watts');
+      w.addEventListener('input', function(){ p.watt = parseFloat(w.value) || 0; compute(); });
+      tdW.appendChild(w); tr.appendChild(tdW);
+
+      var tdD = document.createElement('td');
+      tdD.className = 'r duty'; tdD.id = 'duty-' + i; tdD.textContent = '–';
+      tr.appendChild(tdD);
+
+      var tdX = document.createElement('td');
+      if(payloads.length > 1){
+        var x = document.createElement('button');
+        x.type = 'button'; x.className = 'rm'; x.textContent = '×';
+        x.setAttribute('aria-label', 'Remove ' + p.name);
+        x.addEventListener('click', function(){ payloads.splice(i, 1); renderRows(); compute(); });
+        tdX.appendChild(x);
+      }
+      tr.appendChild(tdX);
+
+      rowsEl.appendChild(tr);
+    });
+  }
+
+  function swap(a, b){
+    var t = payloads[a]; payloads[a] = payloads[b]; payloads[b] = t;
+    renderRows(); compute();
+  }
+
+  $('add').addEventListener('click', function(){
+    payloads.push({ name:'New instrument', watt:5, on:true });
+    renderRows(); compute();
+  });
+
+  // ---------- physics ----------
+  // one smooth solar day, summing to the daily harvest
+  function solarCurve(dailyWh, sunHours){
+    var span = Math.min(14, Math.max(4, sunHours * 2));
+    var raw = [], total = 0;
+    for(var h = 0; h < 24; h++){
+      var d = (h + 0.5) - 12;
+      var v = (Math.abs(d) < span / 2) ? (1 + Math.cos(2 * Math.PI * d / span)) / 2 : 0;
+      raw.push(v); total += v;
+    }
+    return raw.map(function(v){ return total > 0 ? v * dailyWh / total : 0; });
+  }
+
+  // priority cascade against the average available power
+  function cascade(available){
+    var left = available;
+    return payloads.map(function(p){
+      if(!p.on || p.watt <= 0) return { duty:0, on:p.on };
+      var duty = Math.max(0, Math.min(1, left / p.watt));
+      left -= duty * p.watt;
+      return { duty:duty, on:true };
+    });
+  }
+
+  // walk the battery forward; returns the trace and its lowest point
+  function simulate(solar, duties, scale, startWh, capWh){
+    var load = 0;
+    payloads.forEach(function(p, i){
+      if(!p.on) return;
+      var d = duties[i].duty * (i === 0 ? 1 : scale); // never scale the top priority away
+      load += d * p.watt;
+    });
+    var wh = startWh, trace = [wh], low = wh;
+    for(var h = 0; h < 24; h++){
+      wh = wh + solar[h] - load;
+      if(wh > capWh) wh = capWh;
+      if(wh < 0) wh = 0;
+      trace.push(wh);
+      if(wh < low) low = wh;
+    }
+    return { trace:trace, low:low, load:load };
+  }
+
+  // largest scale factor that keeps the whole day above the floor
+  function findScale(solar, duties, startWh, capWh, floorWh){
+    if(simulate(solar, duties, 1, startWh, capWh).low >= floorWh) return 1;
+    var lo = 0, hi = 1;
+    for(var i = 0; i < 26; i++){
+      var mid = (lo + hi) / 2;
+      if(simulate(solar, duties, mid, startWh, capWh).low >= floorWh) lo = mid; else hi = mid;
+    }
+    return lo;
+  }
+
+  // ---------- drawing ----------
+  var NS = 'http://www.w3.org/2000/svg';
+  function el(tag, attrs){
+    var e = document.createElementNS(NS, tag);
+    for(var k in attrs) e.setAttribute(k, attrs[k]);
+    return e;
+  }
+  function txt(x, y, s, attrs){
+    var t = el('text', attrs || {});
+    t.setAttribute('x', x); t.setAttribute('y', y);
+    t.textContent = s;
+    return t;
+  }
+
+  function drawSoc(trace, worst, floorWh, capWh){
+    var svg = $('soc-chart');
+    while(svg.firstChild) svg.removeChild(svg.firstChild);
+    var L = 52, R = 618, T = 16, B = 196;
+    var top = Math.max(capWh, Math.max.apply(null, trace)) * 1.04 || 1;
+    var x = function(i){ return L + (R - L) * i / 24; };
+    var y = function(v){ return B - (B - T) * (v / top); };
+
+    [0, 0.25, 0.5, 0.75, 1].forEach(function(f){
+      var v = top * f;
+      svg.appendChild(el('line', { x1:L, y1:y(v), x2:R, y2:y(v),
+        stroke:'var(--line-soft)', 'stroke-width':1 }));
+      svg.appendChild(txt(L - 8, y(v) + 3.5, Math.round(v),
+        { 'text-anchor':'end', 'font-size':10, fill:'var(--ink-faint)',
+          'font-family':'IBM Plex Mono, monospace' }));
+    });
+
+    [0, 6, 12, 18, 24].forEach(function(h){
+      svg.appendChild(txt(x(h), B + 16, (h < 10 ? '0' : '') + h + ':00',
+        { 'text-anchor':'middle', 'font-size':10, fill:'var(--ink-faint)',
+          'font-family':'IBM Plex Mono, monospace' }));
+    });
+
+    function path(arr, stroke, width, dash){
+      var d = arr.map(function(v, i){ return (i ? 'L' : 'M') + x(i).toFixed(1) + ',' + y(v).toFixed(1); }).join(' ');
+      var p = el('path', { d:d, fill:'none', stroke:stroke, 'stroke-width':width,
+        'stroke-linejoin':'round', 'stroke-linecap':'round' });
+      if(dash) p.setAttribute('stroke-dasharray', dash);
+      svg.appendChild(p);
+    }
+
+    if(worst) path(worst, 'var(--warn)', 1.6, '2 2');
+    path(trace, 'var(--ocean)', 2.5);
+
+    svg.appendChild(el('line', { x1:L, y1:y(floorWh), x2:R, y2:y(floorWh),
+      stroke:'var(--bad)', 'stroke-width':2, 'stroke-dasharray':'5 4' }));
+    svg.appendChild(txt(R, y(floorWh) - 6, 'floor ' + Math.round(floorWh) + ' Wh',
+      { 'text-anchor':'end', 'font-size':10.5, fill:'var(--bad)',
+        'font-family':'IBM Plex Mono, monospace', 'font-weight':600 }));
+
+    svg.appendChild(el('line', { x1:L, y1:B, x2:R, y2:B, stroke:'var(--line)', 'stroke-width':1.3 }));
+    svg.appendChild(el('line', { x1:L, y1:T, x2:L, y2:B, stroke:'var(--line)', 'stroke-width':1.3 }));
+    svg.appendChild(txt(L, 218, 'Wh in the battery, simulated forward from midnight',
+      { 'font-size':10.5, fill:'var(--ink-faint)', 'font-family':'IBM Plex Mono, monospace' }));
+  }
+
+  function drawGantt(duties, scale){
+    var svg = $('gantt');
+    while(svg.firstChild) svg.removeChild(svg.firstChild);
+    var active = [];
+    payloads.forEach(function(p, i){
+      if(p.on && p.watt > 0) active.push({ p:p, i:i, duty:duties[i].duty * (i === 0 ? 1 : scale) });
+    });
+    var L = 140, R = 618, T = 14;
+    var rowH = 26, gap = 7;
+    var h = Math.max(70, T + active.length * (rowH + gap) + 34);
+    svg.setAttribute('viewBox', '0 0 640 ' + h);
+
+    var base = T + active.length * (rowH + gap) + 4;
+    [0, 6, 12, 18, 24].forEach(function(t){
+      var gx = L + (R - L) * t / 24;
+      svg.appendChild(el('line', { x1:gx, y1:T - 4, x2:gx, y2:base,
+        stroke:'var(--line-soft)', 'stroke-width':1 }));
+      svg.appendChild(txt(gx, base + 15, (t < 10 ? '0' : '') + t + ':00',
+        { 'text-anchor':'middle', 'font-size':10, fill:'var(--ink-faint)',
+          'font-family':'IBM Plex Mono, monospace' }));
+    });
+
+    active.forEach(function(a, n){
+      var yy = T + n * (rowH + gap);
+      var w = (R - L) * Math.max(0, Math.min(1, a.duty));
+      svg.appendChild(txt(L - 10, yy + rowH / 2 + 4, a.p.name.length > 22 ? a.p.name.slice(0, 21) + '…' : a.p.name,
+        { 'text-anchor':'end', 'font-size':11.5, fill:'var(--ink-soft)' }));
+      svg.appendChild(el('rect', { x:L, y:yy, width:(R - L), height:rowH, rx:5, fill:'var(--sunk)' }));
+      if(w > 0){
+        svg.appendChild(el('rect', { x:L, y:yy, width:w, height:rowH, rx:5,
+          fill:COLORS[a.i % COLORS.length] }));
+      }
+      var hrs = (a.duty * 24);
+      var lbl = hrs >= 23.95 ? 'all day' : (hrs.toFixed(1) + ' h');
+      var inside = w > 62;
+      svg.appendChild(txt(inside ? L + w - 8 : L + w + 8, yy + rowH / 2 + 4, lbl,
+        { 'text-anchor': inside ? 'end' : 'start', 'font-size':11, 'font-weight':600,
+          fill: inside ? '#fff' : 'var(--ink-soft)', 'font-family':'IBM Plex Mono, monospace' }));
+    });
+
+    if(!active.length){
+      svg.appendChild(txt(320, 40, 'Nothing switched on',
+        { 'text-anchor':'middle', 'font-size':13, fill:'var(--ink-faint)' }));
+    }
+  }
+
+  // ---------- main ----------
+  function compute(){
+    markSite();
+
+    var panel = num('panel', 0), sun = num('sun', 0), derate = num('derate', 0.85);
+    var cap = Math.max(1, num('cap', 1200));
+    var start = Math.min(num('soc', 600), cap);
+    var floorWh = cap * num('floor', 20) / 100;
+    var err = Math.max(0, num('err', 0));
+
+    var dailyWh = panel * sun * derate;
+    var avgW = dailyWh / 24;
+    var solar = solarCurve(dailyWh, sun);
+
+    var duties = cascade(avgW);
+    var scale = findScale(solar, duties, start, cap, floorWh);
+    var sim = simulate(solar, duties, scale, start, cap);
+
+    var worstSolar = solar.map(function(v){ return Math.max(0, v - err); });
+    var worstSim = simulate(worstSolar, duties, scale, start, cap);
+
+    // stats
+    $('s-harvest').innerHTML = Math.round(dailyWh) + '<small>Wh</small>';
+    $('s-avg').innerHTML = avgW.toFixed(1) + '<small>W</small>';
+    $('s-alloc').innerHTML = sim.load.toFixed(1) + '<small>W</small>';
+    $('s-min').innerHTML = Math.round(sim.low) + '<small>Wh</small>';
+
+    // per row duty
+    payloads.forEach(function(p, i){
+      var cell = $('duty-' + i);
+      if(!cell) return;
+      if(!p.on || p.watt <= 0){ cell.textContent = '–'; return; }
+      var d = duties[i].duty * (i === 0 ? 1 : scale);
+      cell.textContent = Math.round(d * 100) + '%  ' + (d * 24).toFixed(1) + 'h';
+    });
+
+    // verdict
+    var v = $('verdict'), vt = $('v-title'), vb = $('v-body');
+    v.className = 'verdict ' + (scale > 0.999 ? 'ok' : (scale > 0.02 ? 'cut' : 'bad'));
+    if(scale > 0.999){
+      vt.textContent = 'Schedule holds';
+      vb.textContent = 'Every instrument runs at the duty cycle the power allows, and the battery never drops '
+        + 'below the floor. Lowest point of the day is ' + Math.round(sim.low) + ' Wh, which is '
+        + Math.round(sim.low - floorWh) + ' Wh of headroom.';
+    } else if(scale > 0.02){
+      vt.textContent = 'Cut back to protect the battery';
+      vb.textContent = 'The power available would have allowed more, but running it would have taken the battery '
+        + 'under the floor. Everything below top priority has been scaled to '
+        + Math.round(scale * 100) + '% of what it asked for. This is the scheduler refusing a schedule, '
+        + 'which is the behaviour you want.';
+    } else {
+      vt.textContent = 'Not survivable as configured';
+      vb.textContent = 'Even with everything below top priority switched off, the battery crosses the floor '
+        + 'within the day. You need a bigger panel, a bigger battery, a lower floor, or a lighter always-on load.';
+    }
+
+    drawSoc(sim.trace, err > 0 ? worstSim.trace : null, floorWh, cap);
+    drawGantt(duties, scale);
+
+    // summary line
+    var names = [];
+    payloads.forEach(function(p, i){
+      if(!p.on || p.watt <= 0) return;
+      var d = duties[i].duty * (i === 0 ? 1 : scale);
+      if(d > 0.001) names.push(p.name + ' ' + Math.round(d * 100) + '%');
+    });
+    var worstNote = err > 0
+      ? ' If the forecast is optimistic by ' + err.toFixed(2) + ' W every hour, the low point becomes '
+        + Math.round(worstSim.low) + ' Wh.'
+      : '';
+    $('summary').textContent = names.length
+      ? ('Today: ' + names.join(', ') + '.' + worstNote)
+      : 'Nothing is switched on.';
+  }
+
+  ['panel','sun','derate','err','cap','soc','floor'].forEach(function(id){
+    $(id).addEventListener('input', compute);
+  });
+
+  buildSites();
+  renderRows();
+  compute();
+})();
+</script>
+
+</body></html>
