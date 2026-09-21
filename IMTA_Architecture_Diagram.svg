@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="680" height="530" viewBox="0 0 680 530" role="img">
+<title>IMTA System Architecture</title>
+<desc>Field hardware writes telemetry to Firestore. Researcher accesses data via the imta-dashboard API or directly via the Firebase Admin SDK.</desc>
+<defs>
+  <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+    <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </marker>
+  <style>
+    .label-title { font-family: -apple-system, "Segoe UI", Roboto, Arial, sans-serif; font-size: 14px; font-weight: 500; }
+    .label-sub   { font-family: -apple-system, "Segoe UI", Roboto, Arial, sans-serif; font-size: 12px; font-weight: 400; }
+    .label-container { font-family: -apple-system, "Segoe UI", Roboto, Arial, sans-serif; font-size: 14px; font-weight: 500; }
+    .arr { stroke: #5F5E5A; stroke-width: 1.5; fill: none; }
+  </style>
+</defs>
+
+<!-- ===== TIER 1: FIELD HARDWARE ===== -->
+<rect x="115" y="50" width="130" height="44" rx="8" fill="#F1EFE8" stroke="#5F5E5A" stroke-width="0.5"/>
+<text class="label-title" x="180" y="72" text-anchor="middle" dominant-baseline="central" fill="#2C2C2A">Jetson</text>
+
+<rect x="275" y="50" width="130" height="44" rx="8" fill="#F1EFE8" stroke="#5F5E5A" stroke-width="0.5"/>
+<text class="label-title" x="340" y="72" text-anchor="middle" dominant-baseline="central" fill="#2C2C2A">Control box</text>
+
+<rect x="435" y="50" width="130" height="44" rx="8" fill="#F1EFE8" stroke="#5F5E5A" stroke-width="0.5"/>
+<text class="label-title" x="500" y="72" text-anchor="middle" dominant-baseline="central" fill="#2C2C2A">Sensors</text>
+
+<line x1="245" y1="72" x2="275" y2="72" class="arr" marker-end="url(#arrow)"/>
+<line x1="405" y1="72" x2="435" y2="72" class="arr" marker-end="url(#arrow)"/>
+
+<text class="label-sub" x="595" y="76" fill="#5F5E5A">Deterministic, identical params</text>
+
+<line x1="340" y1="94" x2="340" y2="148" class="arr" marker-end="url(#arrow)"/>
+<text class="label-sub" x="350" y="125" fill="#5F5E5A">writes telemetry</text>
+
+<!-- ===== TIER 2: FIRESTORE CONTAINER ===== -->
+<rect x="70" y="155" width="540" height="130" rx="14" fill="#E6F1FB" stroke="#185FA5" stroke-width="0.5"/>
+<text class="label-container" x="340" y="178" text-anchor="middle" fill="#0C447C">Firestore database (default)</text>
+
+<rect x="100" y="205" width="240" height="56" rx="8" fill="#E1F5EE" stroke="#0F6E56" stroke-width="0.5"/>
+<text class="label-title" x="220" y="223" text-anchor="middle" dominant-baseline="central" fill="#085041">IMTA Telemetry</text>
+<text class="label-sub" x="220" y="243" text-anchor="middle" dominant-baseline="central" fill="#0F6E56">Time-series readings</text>
+
+<rect x="370" y="205" width="210" height="56" rx="8" fill="#E1F5EE" stroke="#0F6E56" stroke-width="0.5"/>
+<text class="label-title" x="475" y="223" text-anchor="middle" dominant-baseline="central" fill="#085041">IMTA devices</text>
+<text class="label-sub" x="475" y="243" text-anchor="middle" dominant-baseline="central" fill="#0F6E56">Sensor status (TBD)</text>
+
+<line x1="180" y1="285" x2="180" y2="338" class="arr" marker-end="url(#arrow)"/>
+<line x1="500" y1="285" x2="500" y2="338" class="arr" marker-end="url(#arrow)"/>
+
+<!-- ===== TIER 3: ACCESS PATHS ===== -->
+<rect x="80" y="340" width="200" height="56" rx="8" fill="#EEEDFE" stroke="#534AB7" stroke-width="0.5"/>
+<text class="label-title" x="180" y="358" text-anchor="middle" dominant-baseline="central" fill="#3C3489">imta-dashboard API</text>
+<text class="label-sub" x="180" y="378" text-anchor="middle" dominant-baseline="central" fill="#534AB7">GET endpoints</text>
+
+<rect x="400" y="340" width="200" height="56" rx="8" fill="#EEEDFE" stroke="#534AB7" stroke-width="0.5"/>
+<text class="label-title" x="500" y="358" text-anchor="middle" dominant-baseline="central" fill="#3C3489">Firebase Admin SDK</text>
+<text class="label-sub" x="500" y="378" text-anchor="middle" dominant-baseline="central" fill="#534AB7">Direct Firestore reads</text>
+
+<!-- Merge to Tier 4 -->
+<path d="M 180 396 L 180 425 L 340 425" class="arr"/>
+<path d="M 500 396 L 500 425 L 340 425" class="arr"/>
+<line x1="340" y1="425" x2="340" y2="448" class="arr" marker-end="url(#arrow)"/>
+
+<!-- ===== TIER 4: USER'S WORK ===== -->
+<rect x="240" y="450" width="200" height="56" rx="8" fill="#FAEEDA" stroke="#854F0B" stroke-width="0.5"/>
+<text class="label-title" x="340" y="468" text-anchor="middle" dominant-baseline="central" fill="#633806">Your script</text>
+<text class="label-sub" x="340" y="488" text-anchor="middle" dominant-baseline="central" fill="#854F0B">Query and analyze</text>
+</svg>
